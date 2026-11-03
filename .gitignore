@@ -1,0 +1,14 @@
+# Keep binary evidence and local state out of Git history.
+*.zip
+*.db
+*.sqlite
+*.sqlite3
+*.log
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+build/
+__pycache__/
+.pytest_cache/
