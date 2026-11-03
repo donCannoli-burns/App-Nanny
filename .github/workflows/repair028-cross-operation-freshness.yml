@@ -1,0 +1,58 @@
+name: Repair 028 Cross-Operation Export Freshness
+
+on:
+  push:
+    branches:
+      - repair/028-cross-operation-export-freshness
+  pull_request:
+    branches:
+      - repair/027-restore-transaction-freshness
+
+permissions:
+  contents: read
+
+jobs:
+  cross-operation-authority:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Playwright Chromium
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.57.0
+          python -m playwright install --with-deps chromium
+      - name: Exact-source and test byte admission; syntax checks
+        run: |
+          echo 'bd00c4c6326efe65a39fc896f567f4ea0b53f12aa01f6372112eb31ec0dcb1f1  studio/context_tree_studio_authority_repaired_028.html' | sha256sum -c -
+          echo '213c48c4a7aa2c18df8406fb9849719bd6b1336cc3d2cbe777ca6788b639d24c  tests/test_cross_operation_async_028.py' | sha256sum -c -
+          echo '9985d4182d1b0835fcea640005fe1558ca161a4fc03729d94e9585d2c4fd2c7b  studio/context_tree_studio_authority_repaired_027.html' | sha256sum -c -
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          src=Path('studio/context_tree_studio_authority_repaired_028.html').read_text('utf-8')
+          found=re.search(r'<script>(.*?)</script>',src,re.S)
+          assert found, 'Missing Studio inline script'
+          Path('/tmp/app-nanny-028.js').write_text(found.group(1),encoding='utf-8')
+          PY
+          node --check /tmp/app-nanny-028.js
+          python -m py_compile tests/test_cross_operation_async_028.py
+      - name: Repair 020 metadata contract
+        run: python tests/test_metadata_contract_020.py --html studio/context_tree_studio_authority_repaired_028.html --json /tmp/r020-on028.json
+      - name: Repair 021 strict JSON
+        run: python tests/test_duplicate_json_021.py --html studio/context_tree_studio_authority_repaired_028.html --results /tmp/r021-on028.json
+      - name: Repair 022 scaffold admission
+        run: python tests/test_scaffold_admission_022.py --html studio/context_tree_studio_authority_repaired_028.html --results /tmp/r022-on028.json
+      - name: Repair 023 fatal UTF-8
+        run: python tests/test_file_picker_utf8_023.py --html studio/context_tree_studio_authority_repaired_028.html --results /tmp/r023-on028.json
+      - name: Repair 024 file-picker freshness
+        run: python tests/test_file_picker_freshness_024.py --html studio/context_tree_studio_authority_repaired_028.html --results /tmp/r024-on028.json
+      - name: Repair 025 dialog file-read freshness
+        run: python tests/test_authority_dialog_read_freshness_025.py --html studio/context_tree_studio_authority_repaired_028.html --results /tmp/r025-on028.json
+      - name: Repair 026 authority modal isolation
+        run: python tests/test_authority_modal_isolation_026.py --html studio/context_tree_studio_authority_repaired_028.html --results /tmp/r026-on028.json
+      - name: Repair 027 Restore transaction freshness
+        run: python tests/test_restore_freshness_027.py --html studio/context_tree_studio_authority_repaired_028.html --results /tmp/r027-on028.json
+      - name: Repair 028 cross-operation export freshness
+        run: python tests/test_cross_operation_async_028.py --results /tmp/r028.json
