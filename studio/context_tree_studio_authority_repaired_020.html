@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="dark" name="color-scheme"/>
+<title>Context Tree Studio — Offline Context Explorer &amp; Resource Registry</title>
+<style>
+:root{--bg:#0a101b;--panel:#121c2b;--surface:#172438;--surface2:#1c2d42;--border:#2b4156;--text:#edf5ff;--muted:#a0b5c9;--faint:#7690a6;--mint:#63e2c0;--blue:#8cb8ff;--amber:#ffd27c;--red:#ff9aa8;--shadow:0 15px 35px #0004;--radius:13px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{background:radial-gradient(ellipse at 65% -20%,#1b3648 0%,transparent 47%),var(--bg);color:var(--text);margin:0;font:14px/1.47 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer;border-radius:9px;border:1px solid var(--border);background:var(--surface2);color:var(--text);padding:9px 12px;transition:background .15s,border-color .15s}button:hover:not(:disabled){background:#294059;border-color:#5c7d97}button:disabled{opacity:.42;cursor:not-allowed}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--mint);outline-offset:2px}button.primary{background:#146a61;border-color:#2a9c8d;color:white;font-weight:650}button.primary:hover{background:#187f72}button.subtle{background:transparent}button.tiny{padding:4px 8px;font-size:12px}button.danger{color:var(--red)}input,select,textarea{width:100%;background:#0e1826;border:1px solid #365067;border-radius:8px;color:var(--text);padding:10px 11px;outline:none}input::placeholder,textarea::placeholder{color:#6d8598}textarea{resize:vertical;min-height:86px;line-height:1.5}label{font-weight:650;display:block;font-size:12px;color:#b7cadc;margin-bottom:5px}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(22px,3vw,30px);line-height:1.2;letter-spacing:-.6px;margin-bottom:7px}h2{font-size:16px;margin-bottom:12px}h3{font-size:13px;margin-bottom:10px}p{color:var(--muted)}.app{max-width:1700px;margin:auto;padding:20px 23px 60px}.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:16px;flex-wrap:wrap}.eyebrow{color:var(--mint);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.17em;margin-bottom:9px}.intro{max-width:760px;margin-bottom:0}.top-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.pill{border:1px solid var(--border);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:12px}.pill strong{color:var(--mint);font-variant-numeric:tabular-nums}.layout-top{display:grid;grid-template-columns:minmax(0,1.17fr) minmax(350px,.83fr);gap:15px;margin-top:16px}.card{background:linear-gradient(155deg,rgba(25,39,57,.97),rgba(15,25,39,.98));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:17px;min-width:0}.card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px}.card-head h2{margin:0}.tag{font-size:11px;color:var(--mint);background:#163a3b;border:1px solid #2a7065;padding:4px 8px;border-radius:999px}.grid-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.field{min-width:0}.span2{grid-column:span 2}.span3{grid-column:span 3}.micro{font-size:12px;color:var(--faint);margin-top:6px}.keyword-wrap{margin-top:12px;border-top:1px solid var(--border);padding-top:12px}.keyword-grid{display:grid;grid-template-columns:repeat(5,minmax(120px,1fr));gap:8px}.keyword-grid input{font-size:12px;padding:9px}.inline-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.stack{display:flex;flex-direction:column;gap:12px}.instructions{color:var(--muted);margin:0 0 12px}.prompt-area{min-height:160px;font-size:12px}.json-area{min-height:180px;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace}.division{border-top:1px solid var(--border);margin:15px 0}.status-line{min-height:32px;padding:8px 11px;border-radius:7px;background:#0f2634;border:1px solid #275066;color:#b2d9ea;font-size:12px;overflow-wrap:anywhere}.status-line.error{background:#321d2b;border-color:#7b4152;color:#ffbdc7}.status-line.ok{background:#12372e;border-color:#337967;color:#a8f2d4}.workspace-top{margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.workspace-top h2{margin:0;font-size:19px}.stats{display:flex;gap:7px;flex-wrap:wrap}.stat{border:1px solid var(--border);background:#122133;border-radius:9px;padding:5px 9px;font-size:12px;color:#b9cde1}.stat b{color:var(--text)}.workgrid{display:grid;grid-template-columns:minmax(260px,.8fr) minmax(300px,1.08fr) minmax(320px,1.13fr);gap:13px;margin-top:12px;align-items:start}.tree-card,.inspector-card,.export-card{min-height:480px}.tree-actions{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px}.searchbar{margin-bottom:10px}.filters{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 13px}.checkline{font-size:12px;color:var(--muted);display:flex;gap:5px;align-items:center;cursor:pointer;font-weight:normal;margin:0}.checkline input{width:auto;accent-color:#53ceac;padding:0}.tree-body{max-height:540px;min-height:280px;overflow:auto;border:1px solid #293c50;background:#0e1825;border-radius:9px;padding:7px 5px}.tree-entry{display:flex;align-items:center;gap:5px;min-height:31px;border-radius:6px;padding:2px 5px 2px 0;white-space:nowrap;min-width:max-content}.tree-entry:hover{background:#1b2d40}.tree-entry.selected{background:#1e4d4d;outline:1px solid #34796f}.tree-entry.is-excluded{opacity:.64}.tree-entry.is-hidden{opacity:.54}.expander{border:0;background:transparent;width:23px;min-width:23px;padding:3px;color:var(--muted);font-size:13px}.expander:hover{background:#263e53}.entry-label{display:flex;align-items:center;flex:1;gap:7px;background:none;border:0;text-align:left;padding:4px 3px;color:var(--text);min-width:0}.entry-label:hover{border-color:transparent;background:transparent}.fileglyph{font-size:16px;width:21px;text-align:center}.entry-text{overflow:hidden;text-overflow:ellipsis;max-width:265px}.is-excluded .entry-text{text-decoration:line-through}.mini-badge{font-size:10px;padding:1px 5px;border-radius:4px;border:1px solid #486075;color:#acc1d4}.mini-badge.core{color:#ffe2a6;border-color:#7a6141;background:#453727}.mini-badge.hidden{color:#bbbfcb}.mini-badge.excluded{color:#ffc1cb;border-color:#824653}.child-tree{margin-left:14px;border-left:1px solid #2e4355;padding-left:6px}.empty{padding:35px 15px;color:var(--faint);text-align:center}.detail-group{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin:7px 0 12px}.detail-path{font:12px/1.55 ui-monospace,monospace;color:#99c1df;overflow-wrap:anywhere;background:#111f2f;padding:8px;border-radius:7px}.detail-desc{color:var(--muted);font-size:12px;margin:10px 0}.note-card{background:#132235;border:1px solid #344a62;border-radius:9px;padding:11px;margin-top:9px}.note-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}.note-title{font-size:12px;font-weight:750}.note-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.note-grid .name-field{grid-column:span 2}.note-card textarea{min-height:105px}.archived{opacity:.58;border-style:dashed}.archive-label{font-size:11px;color:var(--amber)}.export-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.export-btn{text-align:left;min-height:58px;background:#15293c}.export-btn strong{display:block;color:var(--text);font-size:12px}.export-btn small{color:var(--muted);display:block;margin-top:3px}.ledger{overflow:auto;max-height:300px;border:1px solid var(--border);border-radius:8px;margin-top:10px}.ledger-row{border-bottom:1px solid #2b4156;padding:9px 10px;display:flex;justify-content:space-between;align-items:center;gap:8px;min-width:0}.ledger-row:last-child{border:0}.ledger-row strong{font-size:12px}.ledger-row small{display:block;color:var(--muted);font-size:11px;overflow-wrap:anywhere}.sha{font:11px/1.35 ui-monospace,Consolas,monospace;overflow-wrap:anywhere;color:#b4d7ec;margin-top:3px}.foot-note{color:var(--muted);font-size:12px;margin-top:13px}.details{margin-top:10px;border:1px solid var(--border);border-radius:8px;padding:11px;background:#102032}.details summary{cursor:pointer;color:#d6e8f7;font-weight:650}.details p{font-size:12px;margin:8px 0 0}.notice{padding:10px 12px;border-radius:8px;border:1px solid #5a5038;background:#2b271e;color:#edcea2;font-size:12px}.right-subsection{margin-top:16px}.secondary-caption{font-size:12px;color:var(--muted)}.template-list{display:flex;gap:7px;align-items:center}.template-list select{flex:1;min-width:0}.status-table{margin-top:10px;display:flex;gap:7px;flex-wrap:wrap}.title-icon{width:26px;height:26px;display:inline-grid;place-items:center;border:1px solid #39645f;border-radius:7px;background:#17413e;color:#8ff0cf;margin-right:8px}.kbd{font:11px ui-monospace,monospace;background:#0c1a28;border:1px solid var(--border);padding:2px 5px;border-radius:4px;color:#e0edf8}.footer{text-align:center;color:#7690a6;font-size:12px;margin-top:30px}.only-small{display:none}.muted{color:var(--muted)}.grow{flex:1}.hidden{display:none!important}#toast{position:fixed;bottom:20px;right:20px;z-index:15;background:#214b43;color:#dcfff0;border:1px solid #4ca88d;border-radius:10px;box-shadow:var(--shadow);padding:12px 16px;max-width:min(450px,90vw);opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none}#toast.show{opacity:1;transform:translateY(0)}@media(max-width:1150px){.layout-top{grid-template-columns:1fr}.workgrid{grid-template-columns:1fr 1fr}.export-card{grid-column:span 2;min-height:0}.keyword-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:750px){.app{padding:14px 11px 40px}.grid-fields{grid-template-columns:1fr 1fr}.span3{grid-column:span 2}.workgrid{grid-template-columns:1fr}.export-card{grid-column:span 1}.tree-card,.inspector-card{min-height:0}.keyword-grid{grid-template-columns:repeat(2,1fr)}.topbar{gap:12px}.top-right{width:100%}.entry-text{max-width:205px}.only-small{display:block}}@media(max-width:400px){.grid-fields,.keyword-grid,.export-grid{grid-template-columns:1fr}.span2,.span3{grid-column:span 1}.note-grid{grid-template-columns:1fr}.note-grid .name-field{grid-column:span 1}}
+/* Authority repair styles */
+.authority-overlay{position:fixed;inset:0;z-index:100;background:rgba(1,8,18,.88);display:flex;align-items:center;justify-content:center;padding:20px}
+.authority-box{max-width:840px;width:100%;max-height:92vh;overflow:auto;border:2px solid #f1bd65}
+.authority-diff{max-height:35vh;overflow:auto;background:#101d2c;border:1px solid #456177;border-radius:8px;padding:9px;margin:10px 0}
+.authority-diff details{padding:7px 3px;border-bottom:1px solid #283b51}.authority-diff pre{white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.35 monospace}
+.authority-choice{padding:8px;margin:5px 0;font-weight:600}.authority-choice input{width:auto}
+</style>
+<style>
+/* V2 · independent left explorer, right content stack, full-width export dashboard */
+.app{max-width:1780px;padding:20px 22px 35px}
+.topbar{padding:19px 21px 17px;border:1px solid var(--border);border-radius:var(--radius);background:linear-gradient(140deg,#132637,#121d2d);box-shadow:var(--shadow);margin-bottom:16px}
+.intro{max-width:1000px}
+.studio-columns{display:grid;grid-template-columns:minmax(265px,310px) minmax(0,1fr);gap:14px;align-items:stretch}
+.studio-sidebar{min-width:0;align-self:stretch}
+.studio-sidebar .tree-card{min-height:100%;padding:16px 12px}
+.studio-sidebar .tree-card>.card-head,.studio-sidebar .tree-card>.stats,.studio-sidebar .tree-card>.tree-actions,.studio-sidebar .tree-card>.searchbar,.studio-sidebar .tree-card>.filters,.studio-sidebar .tree-card>.tree-body,.studio-sidebar .tree-card>.foot-note{position:relative}
+.studio-sidebar .tree-card .stats{margin:2px 0 13px}
+.studio-sidebar .tree-body{height:clamp(400px,calc(100vh - 280px),880px);max-height:none;min-height:280px;overflow:auto}
+.studio-sidebar .tree-card{display:block}
+.studio-sidebar .entry-text{max-width:150px}
+.studio-sidebar .tree-entry{min-width:max-content}
+.studio-right{display:flex;flex-direction:column;gap:14px;min-width:0}
+.studio-right .card{min-height:0}
+.studio-right #projectBrief .grid-fields{grid-template-columns:repeat(3,minmax(0,1fr))}
+.text-tools{display:flex;flex-direction:column;gap:14px;min-width:0}
+.tools-section-heading{padding:8px 3px 0}.tools-section-heading h2{font-size:17px;margin-bottom:4px}.tools-section-heading p{margin:0}
+#versionExports{margin-top:15px;min-height:0;padding:20px}
+#versionExports .export-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+#versionExports .ledger{max-height:210px}
+.scratchpad-area{min-height:205px;font:13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace}
+.resource-filter-row{display:grid;grid-template-columns:1fr minmax(145px,.35fr);gap:10px;margin-bottom:13px}
+.resource-layout{display:grid;grid-template-columns:minmax(190px,.72fr) minmax(260px,1.28fr);gap:13px;align-items:start}
+.resource-list{overflow-y:auto;max-height:740px;min-height:240px;border:1px solid var(--border);border-radius:9px;background:#0e1825;padding:6px}
+.resource-item{display:block;text-align:left;width:100%;padding:10px;margin-bottom:5px;border-radius:8px;border-color:transparent;background:transparent;overflow-wrap:anywhere}
+.resource-item:hover{background:#1e3144}.resource-item.active{background:#20464a;border-color:#4b9f91}
+.resource-item strong{display:block;font-size:12px}.resource-item small{color:var(--muted);font-size:11px;display:block;margin-top:3px;overflow-wrap:anywhere}
+.resource-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.resource-tags .mini-badge{max-width:100%;overflow-wrap:anywhere;white-space:normal}
+.resource-editor{background:#102032;border:1px solid var(--border);border-radius:9px;padding:13px;min-width:0}
+.resource-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.resource-fields>.span2{grid-column:span 2}
+.resource-fields textarea{min-height:100px}
+.resource-editor select,.resource-editor input{min-width:0}
+.resource-chip-tray{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.resource-chip-tray button{padding:4px 7px;font-size:11px}
+.priority-line{display:flex;align-items:center;gap:10px}.priority-line input{flex:1;accent-color:var(--mint)}.priority-line output{font-weight:750;font-size:18px;width:25px;text-align:center}
+.review-flag{color:var(--amber);font-size:12px;font-weight:650}
+@media(min-width:950px){.studio-sidebar .tree-card{position:relative}.studio-sidebar .tree-body{position:sticky;top:12px}}
+@media(max-width:1050px){.studio-columns{grid-template-columns:260px minmax(0,1fr)}.studio-right #projectBrief .grid-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.studio-right #projectBrief .span3{grid-column:span 2}.keyword-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.resource-layout{grid-template-columns:1fr}.resource-list{max-height:250px;min-height:140px}}
+@media(max-width:760px){.app{padding:12px 10px 35px}.topbar{padding:16px}.studio-columns{grid-template-columns:1fr}.studio-sidebar .tree-card{min-height:0}.studio-sidebar .tree-body{height:300px;min-height:200px}.studio-sidebar .entry-text{max-width:240px}.studio-right #projectBrief .grid-fields{grid-template-columns:1fr 1fr}.studio-right #projectBrief .span3{grid-column:span 2}#versionExports .export-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.resource-filter-row{grid-template-columns:1fr}.resource-fields{grid-template-columns:1fr}.resource-fields>.span2{grid-column:span 1}}
+@media(max-width:450px){#versionExports .export-grid{grid-template-columns:1fr}.studio-right #projectBrief .grid-fields{grid-template-columns:1fr}.studio-right #projectBrief .span2,.studio-right #projectBrief .span3{grid-column:auto}.keyword-grid{grid-template-columns:1fr}.note-grid{grid-template-columns:1fr}.note-grid .name-field{grid-column:auto}}
+
+/* V3 planning: verifiable snapshots and a synchronized read-only replay */
+.planning-card{border-color:#43677b;background:linear-gradient(145deg,#172b3d,#132335)}
+.replay-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;color:#bde7df;font-size:12px}
+.replay-range{display:grid;grid-template-columns:70px 1fr 40px;gap:12px;align-items:center;margin-top:11px}
+.replay-range label{margin:0}.replay-range input{accent-color:var(--mint)}.replay-range output{font:13px ui-monospace,monospace;text-align:right}
+.planning-split{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(275px,.85fr);gap:12px;margin-top:10px}
+.planning-list{max-height:370px;min-height:200px;overflow:auto;border:1px solid var(--border);border-radius:8px;padding:5px;background:#0c1928}
+.revision-row{text-align:left;display:flex;flex-direction:column;gap:2px;width:100%;margin:0 0 5px;padding:9px 11px;border-color:transparent;background:#15293b;overflow-wrap:anywhere}
+.revision-row.active{background:#22484a;border-color:#5cb79f}.revision-row b{font-size:12px}.revision-row small{color:var(--faint);font-size:11px}.revision-row span{font-size:12px;color:#cadfea}.revision-row em{font-size:12px;color:#e3c697}
+.decision-form{border:1px solid var(--border);border-radius:8px;padding:12px;background:#122338}
+.decision-form textarea{min-height:100px}.decision-fields{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:8px}
+@media(max-width:850px){.planning-split{grid-template-columns:1fr}.planning-list{max-height:240px;min-height:150px}}
+@media(max-width:470px){.decision-fields{grid-template-columns:1fr}}
+</style></head>
+<body>
+<div class="app">
+
+
+
+
+
+<header class="topbar">
+<div><div class="eyebrow">Offline · Human ↔ Agent · JSON-first</div><h1><span class="title-icon">◇</span>Context Tree Studio</h1><p class="intro">Plan applications as editable context trees without creating real files. Organize agent knowledge, retain intentional exclusions, and export verifiable project snapshots.</p></div>
+<div class="top-right"><span class="pill">PROJECT <strong id="projectBadge">No project</strong></span><span class="pill">NEXT EXPORT <strong id="versionBadge">V0.0.0.0-1</strong></span><button class="subtle" data-action="restore">↥ Restore project</button><input accept=".json,.zip,application/json,application/zip" hidden="" id="restoreFile" type="file"/></div>
+</header><div class="studio-columns"><aside aria-label="File explorer sidebar" class="studio-sidebar"><div class="card tree-card" id="workspace"><div class="card-head"><h2>File explorer</h2><span class="tag" id="treeStatus">Empty</span></div><div class="stats" id="stats"></div>
+<div class="tree-actions"><button class="tiny" data-action="add-file">＋ File</button><button class="tiny" data-action="add-folder">＋ Folder</button><button class="tiny" data-action="rename-node">Rename</button><button class="tiny" data-action="move-node">Move ↗</button><button class="tiny" data-action="toggle-excluded">Remove / restore</button></div>
+<input aria-label="Search project tree" class="searchbar" id="treeSearch" placeholder="Search names, descriptions, notes…"/>
+<div class="filters"><label class="checkline"><input id="showHidden" type="checkbox"/> Show hidden</label><label class="checkline"><input checked="" id="showExcluded" type="checkbox"/> Show excluded</label></div>
+<div aria-label="Application scaffold tree" class="tree-body" id="treeView" role="tree"><div class="empty">Your scaffold will appear here.</div></div>
+<p class="foot-note">Hide changes visibility; remove only marks exclusion. Neither deletes a node. Click a row to edit its context.</p>
+</div></aside><main class="studio-right" id="studioMain"><div class="card" id="projectBrief">
+<div class="card-head"><h2>① Project brief</h2><span class="tag">Optional context</span></div>
+<div class="grid-fields">
+<div class="field"><label for="proj-name">Project name</label><input data-project="name" id="proj-name" placeholder="Example: Atlas Workbench"/></div>
+<div class="field"><label for="proj-path">Path (descriptive only)</label><input data-project="path" id="proj-path" placeholder="~/repos/atlas"/></div>
+<div class="field"><label for="proj-status">Current status</label><input data-project="status" id="proj-status" placeholder="Concept / draft / active"/></div>
+<div class="field span2"><label for="proj-goal">Project goal</label><input data-project="goal" id="proj-goal" placeholder="What success looks like"/></div>
+<div class="field"><label for="proj-useCase">Use case</label><input data-project="useCase" id="proj-useCase" placeholder="Who uses it and why"/></div>
+<div class="field span2"><label for="proj-system">System / runtime</label><input data-project="system" id="proj-system" placeholder="Linux · browser · local-only"/></div>
+<div class="field"><label for="proj-codebase">Codebase / language</label><input data-project="codebase" id="proj-codebase" placeholder="Go, JS, Python, etc."/></div>
+</div>
+<div class="keyword-wrap"><div class="card-head"><h3>Five predetermined keyword fields</h3><span class="micro">Included in every export manifest</span></div><div class="keyword-grid">
+<div><label for="kw-domain">1 · Domain</label><input data-keyword="domain" id="kw-domain" placeholder="Dev tools"/></div>
+<div><label for="kw-architecture">2 · Architecture</label><input data-keyword="architecture" id="kw-architecture" placeholder="Local-first"/></div>
+<div><label for="kw-features">3 · Features</label><input data-keyword="features" id="kw-features" placeholder="Tree, notes"/></div>
+<div><label for="kw-integrations">4 · Integrations</label><input data-keyword="integrations" id="kw-integrations" placeholder="Agent JSON"/></div>
+<div><label for="kw-constraints">5 · Constraints</label><input data-keyword="constraints" id="kw-constraints" placeholder="Offline"/></div>
+</div></div>
+
+
+
+
+
+</div><div class="card" id="scaffoldImporter">
+<div class="card-head"><h2>③ Import scaffold JSON</h2><span class="tag">Canonical schema v1</span></div>
+<label for="jsonInput">Paste raw JSON</label><textarea class="json-area" id="jsonInput" placeholder='{"schema":"context-tree/scaffold-v1","project":{"name":"My App"},"tree":[{"name":"src","kind":"folder","children":[{"name":"main.js","kind":"file","core":true}]}]}' spellcheck="false"></textarea>
+<div class="inline-actions" style="margin-top:10px"><button class="primary" data-action="generate">Generate / replace tree</button><button data-action="load-example">Load demo JSON</button><button data-action="open-scaffold">Open JSON file</button><input accept=".json,application/json" hidden="" id="scaffoldFile" type="file"/></div>
+<div aria-live="polite" class="status-line" id="status" role="status" style="margin-top:12px">Ready. Paste a canonical JSON scaffold, or load the demo.</div>
+<details class="details"><summary>Accepted schema and validation rules</summary><p>Required: <span class="kbd">schema: "context-tree/scaffold-v1"</span> and <span class="kbd">tree: []</span>. Every node requires <span class="kbd">name</span> and <span class="kbd">kind: "file" | "folder"</span>; folders may have <span class="kbd">children</span>. Optional: <span class="kbd">description</span>, <span class="kbd">core</span> on files, and <span class="kbd">project</span> metadata. No path separators in node names. Empty folders are valid. This app never writes to the declared project path.</p></details>
+
+
+
+
+
+</div><section class="card planning-card" id="planningCard">
+<div class="card-head"><h2>Planning replay · Tree / Ledger / Context</h2><span class="tag" id="planningRevision">Revision 0</span></div>
+<p class="instructions">Tree = what existed. Ledger = what changed. Context = why. Scrub to a prior revision, then select a node to inspect its historical notes. Replay is read-only.</p>
+<div class="replay-top"><strong id="replayMode">Live tree · revision 0</strong><button class="tiny" data-action="return-live" id="returnLive" disabled>↶ Return to live</button></div>
+<div class="replay-range"><label for="replaySlider">Revision</label><input type="range" id="replaySlider" min="0" max="0" value="0" step="1"/><output id="replayValue">0</output></div>
+<p class="micro" id="planningSummary">0 planning events</p>
+<div class="planning-split"><div><h3>Decision ledger</h3><div class="planning-list" id="planningTimeline"><div class="empty">No planning changes yet.</div></div></div><div class="decision-form"><h3>Record a planning decision</h3>
+<label for="decisionTitle">Proposal / decision</label><input id="decisionTitle" placeholder="Place authorization under server-side policy" maxlength="260"/>
+<div class="decision-fields"><div><label for="decisionActor">Actor</label><select id="decisionActor"><option value="human">human</option><option value="agent">agent (reported)</option><option value="system">system (reported)</option></select></div><div><label for="decisionOutcome">Status</label><select id="decisionOutcome"><option value="accepted">accepted</option><option value="rejected">rejected</option><option value="proposed">proposed</option><option value="deferred">deferred</option></select></div></div>
+<label for="decisionReason">Reason / rationale</label><textarea id="decisionReason" placeholder="Record WHY it changed, tradeoffs, risks, and rejected alternatives…"></textarea>
+<button class="primary" data-action="record-decision">＋ Record at next revision</button><p class="micro">Decision attaches to currently selected node, if any. Actor is user-entered attribution, not independently authenticated.</p></div></div>
+</section><div class="card inspector-card" id="nodeEditor"><div class="card-head"><h2>Node context editor</h2><span class="tag" id="selectedType">Select a node</span></div><div id="inspector"><div class="empty">Select a file or folder to add agent context, metadata, examples, and annotations.</div></div></div><section aria-label="Additional tools" class="text-tools"><div class="tools-section-heading"><h2>Other text-heavy actions</h2><p>Agent request · templates · local scratchpad · reusable paths and URL registry</p></div><div class="card tool-card" id="agentTools"><div class="card-head"><h2>② Agent scaffold request</h2><span class="micro">Copy to your existing agent chat</span></div><p class="instructions">The generated request assumes your agent already knows your application. It asks for a scaffold, <strong>not runnable code</strong>.</p><textarea aria-label="Agent scaffold request" class="prompt-area" id="agentPrompt" spellcheck="false"></textarea><div class="inline-actions" style="margin-top:9px"><button class="primary" data-action="copy-prompt">Copy agent request</button><button data-action="refresh-prompt">↻ Refresh request</button><button class="subtle" data-action="copy-example">Copy example JSON</button></div></div><div class="card tool-card" id="templateTools"><h3>Reusable templates</h3><p class="secondary-caption">Save a structural template, then start an independent project with fresh node IDs. Existing notes and exclusion flags are reset.</p><div class="inline-actions"><button data-action="save-template">＋ Save template from tree</button></div><div class="template-list" style="margin-top:9px"><select aria-label="Saved templates" id="templateSelect"><option value="">No templates saved</option></select><button data-action="create-from-template">New from template</button><button class="tiny danger" data-action="delete-template" title="Delete the selected stored template">Delete</button></div><div id="templateRecoveryNotice" class="notice hidden" role="alert" style="margin-top:10px"></div><button id="templateRecoveryExport" class="tiny hidden" data-action="export-template-recovery" style="margin-top:7px">Export original template storage evidence</button><div id="templateSourceChoices" class="inline-actions hidden" style="margin-top:8px"><button class="tiny" data-action="resolve-template-stores" data-choice="merge">Merge compatible IDs</button><button class="tiny" data-action="resolve-template-stores" data-choice="primary">Use primary</button><button class="tiny" data-action="resolve-template-stores" data-choice="recovery">Use recovery</button><button class="tiny" data-action="resolve-template-stores" data-choice="resolved">Keep prior resolved collection</button></div><div class="notice" style="margin-top:15px"><strong>Portability:</strong> everything works offline. Browser autosave is a convenience; export <strong>Full project ZIP</strong> for a durable backup and later restore.</div></div>
+<section class="card tool-card" id="scratchpadCard">
+<div class="card-head"><h2>Local scratchpad</h2><span class="tag">Project-scoped · autosaved</span></div>
+<p class="instructions">Freeform working notes for this project. No agent execution; text is included in context/full exports and project backups.</p>
+<label for="scratchpad">Scratch notes</label>
+<textarea class="scratchpad-area" id="scratchpad" maxlength="500000" placeholder="Observations, loose ideas, questions, experiments, shorthand reminders, paths to investigate..." spellcheck="false"></textarea>
+<div class="inline-actions" style="margin-top:9px"><button data-action="copy-scratchpad">Copy notes</button><button class="tiny danger" data-action="clear-scratchpad">Clear notes</button><span class="micro" id="scratchCount">0 characters · no edits yet</span></div>
+</section>
+
+<section class="card tool-card" id="resourceCard">
+<div class="card-head"><h2>Paths · tools · URL registry</h2><span class="tag">Virtual references only</span></div>
+<p class="instructions">Keep local paths, installed tools, GitHub accounts and repositories, and a master URL list in one searchable project registry. Tags describe use; nothing is executed or fetched.</p>
+<div class="inline-actions" style="margin-bottom:10px">
+<button class="primary" data-action="add-resource">＋ Add reference</button>
+<button data-action="match-resources" title="Exact textual matching against five project keyword fields">Auto-tag project keyword matches</button>
+<button class="tiny" data-action="clear-resource-matches">Clear auto tags</button>
+</div>
+<div class="resource-filter-row">
+<div><label for="resourceSearch">Search tools, URLs, keywords</label><input id="resourceSearch" placeholder="Filter by name, path, keyword, language…"/></div>
+<div><label for="resourceKindFilter">Category filter</label><select id="resourceKindFilter"><option value="">All categories</option><option value="local_path">Local paths</option><option value="local_tool">Installed / local tools</option><option value="github_account">GitHub accounts</option><option value="github_repo">GitHub repositories</option><option value="url">Master URLs</option><option value="other">Other</option></select></div>
+</div>
+<div class="resource-layout">
+<div><div class="micro" id="resourceSummary" style="margin:0 0 8px">0 saved references</div><div class="resource-list" id="resourceList"><div class="empty">No references yet.</div></div></div>
+<div class="resource-editor" id="resourceEditor"><div class="empty">Add or select a reference to edit its classification and keywords.</div></div>
+</div>
+<details class="details"><summary>Bulk add a master URL / local path list</summary>
+  <p>One URL or path per line. Optional <code>Name | URL or path</code> labels. GitHub account and repository links are classified from their path shape; you can edit every record afterward.</p>
+  <label for="bulkReferences">Master reference list</label><textarea id="bulkReferences" class="json-area" style="min-height:100px" maxlength="250000" placeholder="GitHub account | https://github.com/example&#10;SVG docs | https://www.w3.org/TR/SVG2/&#10;Local tools | ~/repos/.bin/apps/tools"></textarea>
+  <div class="inline-actions" style="margin-top:8px"><button data-action="bulk-add-resources">Add reference lines</button><span class="micro">No URLs are fetched or opened.</span></div>
+ </details>
+ <details class="details"><summary>Keyword classification rules and priority meanings</summary>
+<p>Language uses a preset list; “Not listed” stores your custom label and adds an Agent review flag. Type describes subject (security, image, video, machine learning, education, fun…). Use describes audience (consumer, developer, editor, unknown, experimental). Scope describes where the reference applies (full app, parser, source repo, inspiration). Priority 1 = local convenience / already on machine; 10 = hard-stop dependency: do not proceed if missing or unsafe. This is a planning constraint, not permission to execute.</p>
+<p>Auto-tagging matches explicit phrases from the five project keyword fields against saved reference text. It adds recorded matches without changing your manual tags, and does not pretend to understand semantic relevance. No external lookups are made.</p>
+</details>
+<p class="foot-note">Privacy: avoid passwords, tokens, authenticated URLs or other secrets. These records are stored locally and included in portable exports.</p>
+</section>
+</section></main></div><div class="card export-card" id="versionExports"><div class="card-head"><h2>⑤ Versioned exports</h2><span class="tag">SHA-256 recorded</span></div>
+<div class="status-line" id="releaseStatus">Concept phase · next export V0.0.0.0-1</div>
+<div class="inline-actions" style="margin-top:9px;margin-bottom:14px"><button class="tiny" data-action="official-phase" id="officialBtn">Promote to official phase</button><span class="secondary-caption">Concept: -1, -2… · Official: no suffix</span></div>
+<div class="export-grid">
+<button class="export-btn" data-export="planning_snapshot"><strong>planning_snapshot</strong><small>Current state · revision · SHA-256</small></button>
+<button class="export-btn" data-export="planning_ledger"><strong>planning_ledger</strong><small>Event stream · reasons · replay</small></button>
+<button class="export-btn" data-export="tree_raw"><strong>tree_raw</strong><small>Exact imported scaffold</small></button>
+<button class="export-btn" data-export="tree_full"><strong>tree_full</strong><small>All nodes, flags, and notes</small></button>
+<button class="export-btn" data-export="tree_context"><strong>tree_context</strong><small>Agent-ready context + exclusions</small></button>
+<button class="export-btn" data-export="tree_leafs"><strong>tree_leafs</strong><small>Terminal files + paths</small></button>
+<button class="export-btn" data-export="tree_core"><strong>tree_core</strong><small>Explicitly marked core files</small></button>
+<button class="export-btn" data-export="full_project"><strong>full_project.zip</strong><small>All exports + state + checksums</small></button>
+</div>
+<div class="right-subsection"><div class="card-head"><h3>Verify a saved export</h3><button class="tiny" data-action="verify-export">Check JSON / ZIP file</button><input type="file" hidden id="verifyFile" accept=".json,.zip,application/json,application/zip"/></div><div id="verifyResult" class="status-line">Check a saved planning snapshot, planning ledger, structured tree export, or Full project ZIP. Hashes detect accidental changes; they do not prove who authored a file.</div></div><div class="right-subsection"><div class="card-head"><h3>Download history (separate from planning ledger)</h3><button class="tiny" data-action="download-ledger">Download export receipts</button></div><p class="secondary-caption">Each export increments the version once. SHA-256 below hashes the exact downloaded file; payload checksums are also embedded in structured JSON exports.</p><div class="ledger" id="ledger"><div class="empty">No exports yet.</div></div></div>
+</div><footer class="footer">Context Tree Studio v3 · Single-file offline HTML5 · No filesystem modification, external scripts, network calls, or backend dependencies</footer></div>
+<div id="authorityReview" class="authority-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="authorityTitle">
+ <div class="authority-box card">
+ <h2 id="authorityTitle">Project identity conflict — explicit human decision required</h2>
+ <p id="authorityExplain">The imported scaffold and current project definition disagree.</p>
+ <div id="authorityFields" class="authority-diff"></div>
+ <label class="checkline authority-choice"><input type="radio" name="authorityChoice" value="raw" checked/> Use imported scaffold definition (recommended for an incoming App-Nanny DDL scaffold)</label>
+ <label class="checkline authority-choice"><input type="radio" name="authorityChoice" value="current"/> Keep existing project brief / saved project definition as canonical</label>
+ <label for="authorityReason">Human rationale (required; recorded with a new planning revision)</label>
+ <textarea id="authorityReason" placeholder="Why is this definition authoritative? Specify the product and source."></textarea>
+ <div class="inline-actions"><button id="authorityAccept" class="primary">Accept and record resolution</button><button id="authorityCancel">Cancel without changes</button></div>
+ <p class="micro">No history is rewritten. Old project values remain in their original events; the current authoritative selection is recorded as a new event. Hash integrity alone never resolves a conflict.</p>
+ </div>
+</div>
+<div aria-live="polite" id="toast" role="status"></div>
+<script>
+'use strict';
+(() => {
+const STORAGE_KEY='context-tree-studio-state-v1';
+const TEMPLATE_KEY='context-tree-studio-templates-v1';
+const TEMPLATE_RECOVERY_KEY='context-tree-studio-templates-recovery-v1';
+const TEMPLATE_RESOLUTION_KEY='context-tree-studio-templates-resolution-v1';
+const SCHEMA='context-tree/scaffold-v1';
+const PROJECT_FORMAT='context-tree/project-v1';
+const AUTHORITY_FORMAT='context-tree/canonical-authority-v1';
+const keywordFields=['domain','architecture','features','integrations','constraints'];
+const projectFields=['name','path','status','goal','useCase','system','codebase'];
+const importanceLevels=['low','medium','high','critical'];
+const noteTypes=['note','requirement','user_goal','use_case','reference','url','code_example','decision','constraint','risk','test','agent_instruction'];
+const RESOURCE_KINDS=['local_path','local_tool','github_account','github_repo','url','other'];
+const LANGUAGES=['unknown','not_applicable','html','css','javascript','typescript','json','yaml','go','python','rust','java','kotlin','c','cpp','csharp','bash','powershell','php','ruby','swift','sql','svg','ash','lua','r','dart','not_listed'];
+const RESOURCE_TYPES=['security','image','video','machine_learning','education','fun','developer_tools','automation','database','library','framework','runtime','documentation','design','networking','testing','productivity','other'];
+const RESOURCE_USES=['consumer','developer','editor','unknown','experimental'];
+const RESOURCE_SCOPES=['full_app','parser','source_repo','inspiration','module','testing','documentation','integration','unknown'];
+const PRESET_TAGS=['linux','windows','macos','browser','offline','local-first','cli','docker','git','github','go','javascript','typescript','python','bash','html5','svg','json','security','image','video','machine learning','education','fun','parser','agent','api','database','testing','open-source'];
+
+const emptyMeta=()=>({name:'',path:'',status:'',goal:'',useCase:'',system:'',codebase:'',keywords:Object.fromEntries(keywordFields.map(k=>[k,[]]))});
+const freshState=()=>({format:PROJECT_FORMAT,projectId:id(),project:emptyMeta(),authority:null,raw:'',nodes:[],notes:[],scratchpad:{body:'',updatedAt:null},resources:[],history:[],ledger:[],release:{phase:'concept',base:'0.0.0.0',counter:0,nextOfficial:1},createdAt:now(),updatedAt:now()});
+let state=freshState();let selectedId=null;let selectedResourceId=null;let expanded=new Set();let showHidden=false,showExcluded=true,filter='';let resourceFilter='',resourceKindFilter='';let templates=[];let templateStorageTarget=TEMPLATE_KEY;let templateStorageWritable=true;let templateQuarantine={};let templateLoadWarning='';let templateStoreConflict=false;let templateSourceCopies={primary:null,recovery:null};let templateResolution=null;let templateDecisionCopy=null;let templateMergeCandidate=null;let templatePriorResolution=null;let templateResolutionSources=null;let saveTimer=null;let busy=false;
+function $(id){return document.getElementById(id)}
+function id(){return typeof crypto!=='undefined'&&crypto.randomUUID?crypto.randomUUID():`ct-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`}
+function now(){return new Date().toISOString()}
+function h(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+// Stable imported IDs must be unambiguous and safe across DOM, replay and exports.
+function canonicalObjectId(v){return typeof v==='string'&&/^[A-Za-z0-9][A-Za-z0-9._:-]{0,179}$/.test(v)}
+function clone(v){return v===undefined?null:JSON.parse(JSON.stringify(v))}
+function slug(v){return String(v||'project').toLowerCase().replace(/[^a-z0-9._-]+/g,'-').replace(/^-+|-+$/g,'').slice(0,52)||'project'}
+function status(message,mode=''){const el=$('status');el.textContent=message;el.className='status-line'+(mode?' '+mode:'')}
+let toastTimer;function toast(message){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3000)}
+function writeState(){try{if(state.planning)recordPlanning('autosave','Autosaved pending editor changes',{actor:'human'});state.updatedAt=now();localStorage.setItem(STORAGE_KEY,JSON.stringify(state));return true}catch(e){status('Browser autosave unavailable or full. Export a Full project ZIP to preserve your work.','error');return false}}
+function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(writeState,350)}
+// Planning revisions are independent of export versions. Never truncate the planning ledger.
+let replayRevision=null, replayView=null, lastPlanningSnapshot=null;
+const planningFields=['project','authority','raw','nodes','notes','resources','scratchpad'];
+function planningSnapshot(){return {projectId:state.projectId,project:clone(state.project),authority:clone(state.authority),raw:state.raw,nodes:clone(state.nodes),notes:clone(state.notes),resources:clone(state.resources),scratchpad:clone(state.scratchpad)}}
+function initialPlanningSnapshot(projectId){return {projectId,project:emptyMeta(),authority:null,raw:'',nodes:[],notes:[],resources:[],scratchpad:{body:'',updatedAt:null}}}
+function initPlanning(isNew=false){
+ if(!state.planning||!Array.isArray(state.planning.events)||!state.planning.baseline){
+  const baseline=isNew?initialPlanningSnapshot(state.projectId):planningSnapshot();
+  state.planning={format:'context-tree/planning-ledger-v1',baseline,baseRevision:0,revision:0,events:[],migratedFromLegacy:!isNew&&state.nodes.length>0,startedAt:now()};
+ }
+ lastPlanningSnapshot=clone(state.planning.baseline);
+ for(const event of state.planning.events)lastPlanningSnapshot=applyPlanningChanges(lastPlanningSnapshot,event.changes);
+}
+function assertUniquePlanningIds(snapshot){
+ for(const field of ['nodes','notes','resources']){
+  const ids=new Set();for(const item of snapshot[field]||[]){
+   if(!item||typeof item.id!=='string'||!item.id||ids.has(item.id))throw Error('Invalid or duplicate '+field+' identity in planning revision');
+   ids.add(item.id);
+  }
+ }
+}
+function diffPlanning(before,after){assertUniquePlanningIds(before);assertUniquePlanningIds(after);const changes=[];
+ for(const field of ['project','authority','raw','scratchpad'])if(JSON.stringify(before[field])!==JSON.stringify(after[field]))changes.push({collection:field,before:clone(before[field]),after:clone(after[field])});
+ for(const field of ['nodes','notes','resources']){
+  const b=new Map((before[field]||[]).map(x=>[x.id,x])),a=new Map((after[field]||[]).map(x=>[x.id,x]));
+  for(const itemId of new Set([...b.keys(),...a.keys()])){const x=b.get(itemId)??null,y=a.get(itemId)??null;if(JSON.stringify(x)!==JSON.stringify(y))changes.push({collection:field,id:itemId,before:clone(x),after:clone(y)})}
+ }
+ return changes;
+}
+function applyPlanningChanges(s,changes){for(const c of changes||[]){if(['project','authority','raw','scratchpad'].includes(c.collection)){s[c.collection]=clone(c.after);continue}if(!['nodes','notes','resources'].includes(c.collection))continue;const arr=s[c.collection];const idx=arr.findIndex(x=>x.id===c.id);if(c.after===null){if(idx!==-1)arr.splice(idx,1)}else if(idx===-1)arr.push(clone(c.after));else arr[idx]=clone(c.after)}return s}
+// Enforce causal evidence, not merely a self-consistent hash and final snapshot.
+// The before value must describe the immediate predecessor for EACH change.
+// This cannot authenticate the author of imported history.
+function assertPlanningPredecessors(snapshot,changes){
+ if(!Array.isArray(changes))throw Error('Planning changes must be an array');
+ const seen=new Set();
+ for(const c of changes){
+  if(!c||typeof c!=='object'||!Object.hasOwn(c,'before')||!Object.hasOwn(c,'after'))throw Error('Planning change lacks before/after evidence');
+  const collection=c.collection;
+  if(!planningFields.includes(collection))throw Error('Unknown planning collection');
+  const objectCollection=['nodes','notes','resources'].includes(collection);
+  if(objectCollection&&(typeof c.id!=='string'||!c.id))throw Error('Planning object change missing identity');
+  const key=objectCollection?collection+':'+c.id:collection;
+  if(seen.has(key))throw Error('Duplicate planning change target');
+  seen.add(key);
+  const previous=objectCollection?(snapshot[collection]||[]).find(x=>x.id===c.id)??null:snapshot[collection]??null;
+  if(!deepEqual(previous,c.before))throw Error('Planning change predecessor mismatch: '+key);
+  if(objectCollection&&c.after!==null&&(!c.after||c.after.id!==c.id))throw Error('Planning after object identity mismatch: '+key);
+ }
+}
+function deepEqual(a,b){if(a===b)return true;if(a===null||b===null||typeof a!==typeof b)return false;if(typeof a!=='object'||!a||!b)return false;if(Array.isArray(a)||Array.isArray(b))return Array.isArray(a)&&Array.isArray(b)&&a.length===b.length&&a.every((v,i)=>deepEqual(v,b[i]));const ak=Object.keys(a).sort(),bk=Object.keys(b).sort();return ak.length===bk.length&&ak.every((k,i)=>k===bk[i]&&deepEqual(a[k],b[k]))}
+function recordPlanning(kind,message,extra={}){
+ if(!state.planning)initPlanning(true);
+ const after=planningSnapshot(),changes=diffPlanning(lastPlanningSnapshot||state.planning.baseline,after);
+ if(!changes.length&&!['decision','authority_resolution'].includes(kind))return;
+ const rev=state.planning.revision+1;
+ const entry={revision:rev,id:id(),timestamp:now(),actor:extra.actor||'human',kind,message,reason:extra.reason||'',outcome:extra.outcome||null,nodeId:extra.nodeId||null,noteId:extra.noteId||null,resourceId:extra.resourceId||null,changes,previousHash:state.planning.events.at(-1)?.sha256||null};
+ // Bind the authority decision to an actual planning revision; digest links are
+ // integrity evidence, not independently authenticated proof of a human actor.
+ if(['authority_resolution','project_metadata_edit'].includes(kind)&&state.authority){
+  entry.authorityProof={projectId:state.projectId,source:state.authority.source,
+   canonicalProjectSha256:state.authority.canonicalProjectSha256,
+   importedProjectSha256:state.authority.importedProjectSha256};
+ }
+ entry.sha256=shaFallback(jsonBytes(entry));
+ state.planning.revision=rev;state.planning.events.push(entry);lastPlanningSnapshot=after;
+ if(replayRevision===null){renderPlanningTimeline();updatePlanningStatus()}
+}
+function audit(kind,message,extra={}){state.history.push({id:id(),timestamp:now(),kind,message,...extra});if(state.history.length>5000)state.history.splice(0,state.history.length-5000);recordPlanning(kind,message,extra);scheduleSave()}
+function flushPendingRevision(){recordPlanning('edit','Saved pending editor changes',{actor:'human'});}
+function activeSnapshot(){return replayView||state}
+function replayTo(revision){const p=state.planning;if(!p)return planningSnapshot();let s=clone(p.baseline);for(const ev of p.events){if(ev.revision>revision)break;s=applyPlanningChanges(s,ev.changes)}return s}
+function setReplay(revision){flushPendingRevision();const r=Number(revision);if(!Number.isSafeInteger(r)||r<0||r>state.planning.revision)return;replayRevision=r;replayView=replayTo(r);if(selectedId&&!replayView.nodes.some(n=>n.id===selectedId))selectedId=replayView.nodes[0]?.id||null;renderTree();renderInspector();renderPlanningTimeline();updatePlanningStatus()}
+function replayLive(){replayRevision=null;replayView=null;renderTree();renderInspector();renderPlanningTimeline();updatePlanningStatus()}
+function requireLive(){if(replayRevision!==null){toast('Replay is read-only. Choose Return to live before editing.');return false}return true}
+function updatePlanningStatus(){if(!$('planningRevision'))return;const r=state.planning?.revision||0;$('planningRevision').textContent=`Revision ${r}`;$('replayMode').textContent=replayRevision===null?`Live tree · revision ${r}`:`Historical revision ${replayRevision} / ${r} · READ ONLY`;$('returnLive').disabled=replayRevision===null;const slider=$('replaySlider');slider.max=r;slider.value=replayRevision===null?r:replayRevision;$('replayValue').textContent=String(replayRevision===null?r:replayRevision)}
+function renderPlanningTimeline(){const el=$('planningTimeline');if(!el)return;const p=state.planning;const ev=p?.events||[];const recent=ev.slice(-90).reverse();el.innerHTML=recent.length?recent.map(x=>`<button class="revision-row ${replayRevision===x.revision?'active':''}" data-action="replay-select" data-revision="${x.revision}"><b>r${x.revision} · ${h(x.kind)}</b><small>${h(x.timestamp)} · ${h(x.actor)}${x.outcome?' · '+h(x.outcome):''}</small><span>${h(x.message)}</span>${x.reason?`<em>Why: ${h(x.reason)}</em>`:''}</button>`).join(''):'<div class="empty">No planning changes recorded yet. Import a scaffold or record a decision.</div>';
+ const n=$('planningSummary');if(n)n.textContent=`${ev.length} events · initial revision 0${p?.migratedFromLegacy?' · migration checkpoint (earlier edits not replayable)':''}`;
+}
+function recordDecision(){if(!requireLive())return;const outcome=$('decisionOutcome').value,reason=$('decisionReason').value.trim(),message=$('decisionTitle').value.trim(),actor=$('decisionActor').value;if(!message||!reason){toast('Decision and rationale are both required.');return}const n=nodeById(selectedId);audit('decision',message,{actor,outcome,reason,nodeId:n?.id||null});$('decisionTitle').value='';$('decisionReason').value='';renderPlanningTimeline();updatePlanningStatus();toast('Decision stored at revision '+state.planning.revision)}
+function validName(name){return typeof name==='string'&&name.trim()===name&&name.length>0&&name.length<=180&&!/[\\/\x00-\x1f]/.test(name)&&!['.','..'].includes(name)}
+function scaffoldValidate(doc){
+ if(!doc||typeof doc!=='object'||Array.isArray(doc))throw Error('Scaffold must be a JSON object.');
+ if(doc.schema!==SCHEMA)throw Error(`Expected schema "${SCHEMA}". Use Copy example JSON to inspect the format.`);
+ if(!Array.isArray(doc.tree))throw Error('Scaffold needs a top-level "tree" array.');
+ if(doc.project!==undefined&&(doc.project===null||typeof doc.project!=='object'||Array.isArray(doc.project)))throw Error('"project" must be an object.');
+ let count=0;function test(items,depth){if(depth>60)throw Error('Tree exceeds 60 folder levels.');if(!Array.isArray(items))throw Error('A folder children property must be an array.');const siblings=new Set();for(const n of items){if(!n||typeof n!=='object'||Array.isArray(n))throw Error('Every tree node must be an object.');if(!validName(n.name))throw Error('Each name must be 1–180 characters and contain no slash, backslash, or control characters.');if(siblings.has(n.name))throw Error(`Duplicate sibling name: ${n.name}`);siblings.add(n.name);if(!['file','folder'].includes(n.kind))throw Error(`Node "${n.name}" needs kind "file" or "folder".`);if(n.description!==undefined&&typeof n.description!=='string')throw Error(`Description for ${n.name} must be a string.`);if(n.core!==undefined&&typeof n.core!=='boolean')throw Error(`core for ${n.name} must be boolean.`);if(n.kind==='file'&&n.children!==undefined)throw Error(`File "${n.name}" cannot have children.`);count++;if(count>15000)throw Error('Too many nodes (limit 15,000).');if(n.kind==='folder')test(n.children||[],depth+1)}}test(doc.tree,0);
+ return count;
+}
+function mapScaffold(doc){const nodes=[];function visit(arr,parentId){for(const item of arr){const nid=id();nodes.push({id:nid,parentId,name:item.name,kind:item.kind,description:item.description||'',state:{visibility:'visible',inclusion:'included',core:item.kind==='file'&&Boolean(item.core)},createdAt:now(),updatedAt:now()});if(item.kind==='folder')visit(item.children||[],nid)}}visit(doc.tree,null);return nodes}
+function keywordArray(v){return [...new Set((Array.isArray(v)?v:String(v||'').split(/[,;\n]/)).map(x=>String(x).trim()).filter(Boolean))].slice(0,100)}
+function metaFromJson(obj){const p=emptyMeta();for(const key of projectFields)if(typeof obj?.[key]==='string')p[key]=obj[key];for(const k of keywordFields)p.keywords[k]=keywordArray(obj?.keywords?.[k]);return p}
+function collectUiMeta(){const meta=emptyMeta();for(const f of projectFields)meta[f]=$('proj-'+f).value;for(const k of keywordFields)meta.keywords[k]=keywordArray($('kw-'+k).value);return meta}
+function authorityFieldsDiff(a,b){const result=[];for(const f of projectFields)if(b[f]&&a[f]!==b[f])result.push(f);for(const k of keywordFields)if(b.keywords[k].length&&!deepEqual(a.keywords[k],b.keywords[k]))result.push('keywords.'+k);return result}
+function fullProjectDiff(a,b){const result=[];for(const f of projectFields)if(!deepEqual(a[f],b[f]))result.push(f);for(const k of keywordFields)if(!deepEqual(a.keywords[k],b.keywords[k]))result.push('keywords.'+k);return result}
+function mergeNoConflict(imported,brief){const merged=clone(imported);for(const f of projectFields)if(!merged[f]&&brief[f])merged[f]=brief[f];for(const k of keywordFields)if(!merged.keywords[k].length&&brief.keywords[k].length)merged.keywords[k]=brief.keywords[k];return merged}
+function canonicalHash(project){return shaFallback(jsonBytes(metaFromJson(project)))}
+function authorityBinding(canonical,rawProject,source,fields=[],reason='',actor='human'){
+ return {format:AUTHORITY_FORMAT,status:'resolved',source,actor,reason,conflictFields:[...fields],canonicalProjectSha256:canonicalHash(canonical),importedProjectSha256:canonicalHash(rawProject),resolvedAt:now()};
+}
+function inspectAuthority(p){
+ if(!p?.raw)return {status:'UNPROVEN',conflicts:['missing_original_scaffold']};
+ let parsed;
+ try{parsed=JSON.parse(p.raw);scaffoldValidate(parsed);if(!parsed.project||typeof parsed.project!=='object')throw Error('Missing scaffold project')}
+ catch(e){return {status:'CONFLICT',conflicts:['invalid_original_scaffold']}}
+ const imported=metaFromJson(parsed.project),current=metaFromJson(p.project),fields=fullProjectDiff(imported,current),a=p.authority;
+ if(!a)return fields.length?{status:'CONFLICT',conflicts:fields}:{status:'VALID_LEGACY',conflicts:[]};
+ if(a.format!==AUTHORITY_FORMAT||a.status!=='resolved'||!['imported_scaffold','existing_brief','restored_original','restored_saved','human_project_edit','template_created'].includes(a.source))return {status:'CONFLICT',conflicts:['invalid_authority_record']};
+ if(a.canonicalProjectSha256!==canonicalHash(current)||a.importedProjectSha256!==canonicalHash(imported))return {status:'CONFLICT',conflicts:['stale_authority_binding']};
+ if(fields.length){
+  if(a.actor!=='human'||typeof a.reason!=='string'||a.reason.trim().length<12)return {status:'CONFLICT',conflicts:['missing_human_resolution']};
+  // Imported metadata cannot attest to its own human provenance. The local
+  // human action must at minimum have generated a causally bound ledger event.
+  // An unsigned imported ledger is still only a historical assertion.
+  const events=p.planning?.events;
+  if(!Array.isArray(events)||!events.some(e=>
+   ['authority_resolution','project_metadata_edit'].includes(e?.kind)&&
+   e.actor==='human'&&typeof e.reason==='string'&&e.reason===a.reason&&
+   (e.kind==='project_metadata_edit'||e.outcome==='accepted')&&
+   e.authorityProof?.projectId===p.projectId&&
+   e.authorityProof?.source===a.source&&
+   e.authorityProof?.canonicalProjectSha256===a.canonicalProjectSha256&&
+   e.authorityProof?.importedProjectSha256===a.importedProjectSha256
+  ))return {status:'CONFLICT',conflicts:['unlinked_human_authority_claim']};
+ }
+ return {status:'VALID',conflicts:fields};
+}
+function assertSemanticAuthority(p){const verdict=inspectAuthority(p);if(verdict.status!=='VALID'&&verdict.status!=='VALID_LEGACY')throw Error('UNRESOLVED_IDENTITY_CONFLICT: '+verdict.conflicts.join(', '));return verdict}
+let pendingAuthorityTask=null;
+function showAuthorityDialog(task){pendingAuthorityTask=task;const fields=task.conflicts;$('authorityExplain').textContent=(task.kind==='restore'?'Saved project definition':'Existing Project Brief')+' disagrees with the original imported scaffold in '+fields.length+' fields. Choose the authoritative definition; unchosen values remain in source/history.';
+ $('authorityFields').innerHTML=fields.map(f=>{const key=f.startsWith('keywords.')?f.split('.')[1]:f;const rawValue=f.startsWith('keywords.')?task.imported.keywords[key]:task.imported[key];const currentValue=f.startsWith('keywords.')?task.current.keywords[key]:task.current[key];return `<details><summary>${h(f)}</summary><pre>Imported: ${h(JSON.stringify(rawValue))}
+Existing: ${h(JSON.stringify(currentValue))}</pre></details>`}).join('');
+ $('authorityReason').value='';document.querySelector('input[name="authorityChoice"][value="raw"]').checked=true;$('authorityReview').classList.remove('hidden');$('authorityReason').focus();status('UNRESOLVED_IDENTITY_CONFLICT · Select an authoritative project definition.','error');
+}
+function closeAuthorityDialog(){pendingAuthorityTask=null;$('authorityReview').classList.add('hidden')}
+function finishImport(task,choice,reason){const canonical=choice==='raw'?task.imported:task.current;const merged=canonical;
+ state=freshState();state.project=clone(merged);state.raw=task.raw;state.nodes=mapScaffold(task.doc);state.authority=authorityBinding(state.project,task.imported,choice==='raw'?'imported_scaffold':'existing_brief',task.conflicts,reason,task.conflicts.length?'human':'system');
+ initPlanning(true);selectedId=state.nodes[0]?.id||null;selectedResourceId=null;expanded=new Set(state.nodes.filter(n=>n.kind==='folder').map(n=>n.id));audit('import',`Imported ${task.count} scaffold nodes`);
+ if(task.conflicts.length)audit('authority_resolution','Accepted canonical project definition from '+state.authority.source,{actor:'human',reason,outcome:'accepted'});
+ writeState();renderAll();status(`Imported ${task.count} virtual nodes · SEMANTICS_VALID · Source: ${state.authority.source}`,'ok');$('workspace').scrollIntoView({block:'start',behavior:'smooth'});
+}
+function finishRestore(task,choice,reason){const restored=task.restored;restored.project=clone(choice==='raw'?task.imported:task.current);restored.authority=authorityBinding(restored.project,task.imported,choice==='raw'?'restored_original':'restored_saved',task.conflicts,reason,'human');
+ try{commitRestoredProject(restored,task.bundledTemplates,'Restored with explicit authority resolution · SEMANTICS_VALID · Previous events preserved',reason)}
+ catch(e){status('Restore failed: '+e.message,'error')}
+}
+function acceptAuthorityDialog(){const task=pendingAuthorityTask;if(!task)return;const reason=$('authorityReason').value.trim();if(reason.length<12){status('Give a specific human rationale of at least 12 characters.','error');return}const choice=document.querySelector('input[name="authorityChoice"]:checked')?.value||'raw';closeAuthorityDialog();if(task.kind==='import')finishImport(task,choice,reason);else finishRestore(task,choice,reason)}
+function markHumanProjectEdit(){if(!state.raw)return;let imported;try{imported=metaFromJson(JSON.parse(state.raw).project)}catch(e){return}state.authority=authorityBinding(state.project,imported,'human_project_edit',fullProjectDiff(imported,state.project),'Human edited the Project Brief in the local UI.','human')}
+function renderMeta(){for(const f of projectFields)$('proj-'+f).value=state.project[f]||'';for(const k of keywordFields)$('kw-'+k).value=keywordArray(state.project.keywords?.[k]).join(', ')}
+function checkDiscard(){return !state.nodes.length||confirm('Replace the current tree? Your browser autosave will be replaced. Export a Full project ZIP first if you want a durable snapshot.');}
+function generate(){if(!requireLive()||!checkDiscard())return;const raw=$('jsonInput').value;if(raw.length>2_000_000){status('Scaffold too large: maximum 2 MB of JSON text.','error');return}try{const doc=JSON.parse(raw);const count=scaffoldValidate(doc);if(!doc.project)throw Error('The project object is required for authoritative scaffold import.');const imported=metaFromJson(doc.project),current=collectUiMeta(),conflicts=authorityFieldsDiff(imported,current);const task={kind:'import',doc,count,raw,imported,current,conflicts};if(conflicts.length){showAuthorityDialog(task);return}finishImport(task,'raw','No competing populated project field');}catch(e){status(`Import failed: ${e.message}`,'error')}}
+const demo={schema:SCHEMA,project:{name:'Atlas Workbench',status:'concept',goal:'Plan a local agent-aware workbench',system:'Offline HTML5 / JavaScript',keywords:{domain:'developer tools',architecture:'local-first',features:'context trees, notes',integrations:'JSON agent handoff',constraints:'no backend'}},tree:[{name:'src',kind:'folder',children:[{name:'main.js',kind:'file',core:true,description:'Entry point and bootstrapping'},{name:'ui',kind:'folder',children:[{name:'tree-view.js',kind:'file',core:true,description:'Explorer rendering and selection'},{name:'inspector.js',kind:'file',description:'Notes and node metadata'}]},{name:'legacy.js',kind:'file',description:'Optional legacy adapter'}]},{name:'tests',kind:'folder',children:[{name:'tree.test.js',kind:'file',description:'State and export contract tests'}]},{name:'README.md',kind:'file',description:'Project purpose and setup'},{name:'package.json',kind:'file',description:'Build manifest'}]};
+function createPrompt(){const p=collectUiMeta(), filled=Object.entries(p).filter(([k,v])=>k!=='keywords'&&String(v).trim()).map(([k,v])=>`- ${k}: ${v}`).join('\n')||'- Use the project requirements already established in this conversation.';const keywords=keywordFields.map(k=>`${k}: ${p.keywords[k]||'(infer or leave empty)'}`).join('; ');return `Based on our established application requirements, produce a MOCK APPLICATION FILE/FOLDER SCAFFOLD as VALID JSON ONLY. Do not write implementation code, comments, Markdown fences, or explanations. Include meaningful files, modules, configs, documentation, and tests; prefer a realistic but manageable hierarchy. Each file should have a short description of its role. Mark only genuinely essential entrypoints/core modules with core: true.\n\nProject context:\n${filled}\nTop five keyword categories: ${keywords}\n\nRequired strict output schema:\n${JSON.stringify({schema:SCHEMA,project:{name:p.name||'Project Name',path:p.path||'',status:p.status||'',goal:p.goal||'',useCase:p.useCase||'',system:p.system||'',codebase:p.codebase||'',keywords:p.keywords},tree:[{name:'src',kind:'folder',children:[{name:'main.js',kind:'file',description:'Core entry point',core:true}]},{name:'README.md',kind:'file',description:'Project overview'}]},null,2)}\n\nRules: use only tree entries with name, kind (file or folder), optional description and optional core (files only). Only folders contain children. Names are a single path segment (no slashes or backslashes). Do not include file contents. Include all relevant scaffold paths as nested folders and files. Return a single parseable JSON object.`}
+function refreshPrompt(){if(document.activeElement!==$('agentPrompt'))$('agentPrompt').value=createPrompt()}
+function nodeById(nid){return activeSnapshot().nodes.find(n=>n.id===nid)||null}
+function childrenOf(nid){return activeSnapshot().nodes.filter(n=>n.parentId===nid)}
+function parentNode(n){return n?.parentId?nodeById(n.parentId):null}
+function pathFor(n){if(!n)return '';const seen=new Set(),parts=[];let x=n;while(x){if(seen.has(x.id))return '[invalid cycle]';seen.add(x.id);parts.push(x.name);x=parentNode(x)}return parts.reverse().join('/')}
+function effectiveExcluded(n){let x=n,seen=new Set();while(x){if(seen.has(x.id))return true;seen.add(x.id);if(x.state.inclusion==='excluded')return true;x=parentNode(x)}return false}
+function ancestorPaths(n){let x=parentNode(n),arr=[],seen=new Set();while(x&&!seen.has(x.id)){seen.add(x.id);arr.push({id:x.id,name:x.name}) ;x=parentNode(x)}return arr.reverse()}
+function countStats(){let files=0,folders=0,excluded=0,hidden=0,core=0;for(const n of state.nodes){n.kind==='file'?files++:folders++;if(effectiveExcluded(n))excluded++;if(n.state.visibility==='hidden')hidden++;if(n.kind==='file'&&n.state.core&&!effectiveExcluded(n))core++}return {files,folders,excluded,hidden,core,notes:state.notes.filter(n=>!n.archived).length}}
+function renderStats(){const s=countStats();$('stats').innerHTML=Object.entries(s).map(([k,v])=>`<span class="stat"><b>${v}</b> ${h(k)}</span>`).join('');$('projectBadge').textContent=state.project.name||'Untitled';$('treeStatus').textContent=`${state.nodes.length} nodes`}
+function isHit(n){if(!filter)return true;const needle=filter.toLowerCase();if([n.name,n.description,pathFor(n)].some(s=>s.toLowerCase().includes(needle)))return true;return activeSnapshot().notes.some(x=>x.nodeId===n.id&&!x.archived&&[x.name,x.type,x.body].some(s=>String(s).toLowerCase().includes(needle)))}
+function hasMatchDescendant(n,seen=new Set()){if(seen.has(n.id))return false;seen.add(n.id);for(const c of childrenOf(n.id))if((visibleFilter(c)&&isHit(c))||(visibleFilter(c)&&hasMatchDescendant(c,seen)))return true;return false}
+function visibleFilter(n){if(!showHidden&&n.state.visibility==='hidden')return false;if(!showExcluded&&effectiveExcluded(n))return false;return true}
+function renderTree(){const root=$('treeView');const view=activeSnapshot();if(!view.nodes.length){root.innerHTML='<div class="empty">No scaffold yet. Import JSON or load the demo to begin.</div>';return}let rendered=0;
+ function branch(n,depth){if(depth>65||!visibleFilter(n))return '';if(filter&&!isHit(n)&&!hasMatchDescendant(n))return '';rendered++;const isFolder=n.kind==='folder',open=filter?true:expanded.has(n.id),kids=isFolder?childrenOf(n.id):[],excluded=effectiveExcluded(n),hidden=n.state.visibility==='hidden';let badges=`${n.state.core?'<span class="mini-badge core">CORE</span>':''}${hidden?'<span class="mini-badge hidden">HIDDEN</span>':''}${excluded?'<span class="mini-badge excluded">EXCLUDED</span>':''}`;let html=`<div class="tree-entry ${n.id===selectedId?'selected':''} ${excluded?'is-excluded':''} ${hidden?'is-hidden':''}" role="treeitem" aria-selected="${n.id===selectedId}" aria-level="${depth+1}" ${isFolder?`aria-expanded="${open}"`:''} title="${h(pathFor(n))}"><button class="expander" data-action="expand" data-id="${h(n.id)}" ${isFolder?'':'disabled'} aria-label="${isFolder?'Toggle folder':'File'}">${isFolder?(open?'▾':'▸'):'·'}</button><button class="entry-label" data-action="select" data-id="${h(n.id)}"><span class="fileglyph" aria-hidden="true">${isFolder?(open?'📂':'📁'):'📄'}</span><span class="entry-text">${h(n.name)}</span>${badges}</button></div>`;if(isFolder&&open&&kids.length){const content=kids.map(c=>branch(c,depth+1)).join('');if(content)html+=`<div class="child-tree" role="group">${content}</div>`}return html}
+ const str=view.nodes.filter(n=>n.parentId===null).map(n=>branch(n,0)).join('');root.innerHTML=str||'<div class="empty">No matching visible nodes. Check the hidden/excluded filters.</div>';}
+function optionList(vals,value){return vals.map(v=>`<option value="${h(v)}" ${v===value?'selected':''}>${h(v.replace(/_/g,' '))}</option>`).join('')}
+function renderInspector(){const n=nodeById(selectedId),el=$('inspector');$('selectedType').textContent=n?.kind||'Select a node';if(!n){el.innerHTML='<div class="empty">Click a file or folder to manage context and non-destructive state.</div>';return}const excluded=effectiveExcluded(n),selfExcluded=n.state.inclusion==='excluded';const notes=activeSnapshot().notes.filter(x=>x.nodeId===n.id);if(replayRevision!==null){const ev=state.planning.events.find(e=>e.revision===replayRevision);el.innerHTML=`<div class="notice">Historical tree at revision ${replayRevision}. This inspector is read-only. ${ev?.reason?'Reason: '+h(ev.reason):''}</div><div class="detail-path">${h(pathFor(n))}</div><div class="detail-group"><span class="mini-badge">ID: ${h(n.id)}</span><span class="mini-badge">Parent: ${h(n.parentId||'root')}</span><span class="mini-badge">${h(n.state.inclusion)}</span></div><p>${h(n.description)}</p><h3>Notes at revision ${replayRevision}</h3>${notes.map(t=>`<div class="note-card"><strong>${h(t.name)}</strong> · ${h(t.type)} · ${h(t.importance)}<p style="white-space:pre-wrap">${h(t.body)}</p></div>`).join('')||'<p>No notes at this revision.</p>'}`;return}el.innerHTML=`<div class="detail-path">${h(pathFor(n))}</div><div class="detail-group"><span class="mini-badge">ID: ${h(n.id.slice(0,8))}…</span><span class="mini-badge">Parent: ${h(n.parentId?n.parentId.slice(0,8)+'…':'root')}</span></div><label for="nodeDescription">Node purpose / description</label><textarea id="nodeDescription" data-node-field="description" placeholder="Purpose of this file or directory…">${h(n.description)}</textarea><div class="detail-group"><button class="tiny" data-action="rename-node">✎ Rename</button><button class="tiny" data-action="toggle-hidden">${n.state.visibility==='hidden'?'◉ Unhide':'◌ Hide'}</button><button class="tiny ${selfExcluded?'':'danger'}" data-action="toggle-excluded">${selfExcluded?'↶ Restore inclusion':'⊘ Remove (exclude)'}</button>${n.kind==='file'?`<label class="checkline"><input type="checkbox" id="nodeCore" ${n.state.core?'checked':''}> Explicit core file</label>`:''}</div>${excluded&&!selfExcluded?'<div class="notice">This node is effectively excluded by an ancestor. Restore the excluded parent to include it.</div>':''}<div class="division"></div><div class="card-head"><h3>Agent notes (${notes.filter(x=>!x.archived).length})</h3><button class="tiny" data-action="add-note">＋ New note</button></div>${notes.length?notes.map(note=>`<div class="note-card ${note.archived?'archived':''}" data-note="${h(note.id)}"><div class="note-header"><span class="note-title">${note.archived?'<span class="archive-label">ARCHIVED · </span>':''}Context note</span><button class="tiny" data-action="archive-note" data-note-id="${h(note.id)}">${note.archived?'Restore':'Archive'}</button></div><div class="note-grid"><div class="field name-field"><label>Note name</label><input data-note-field="name" data-note-id="${h(note.id)}" value="${h(note.name)}" placeholder="User_Note"></div><div class="field"><label>Importance / user value</label><select data-note-field="importance" data-note-id="${h(note.id)}">${optionList(importanceLevels,note.importance)}</select></div><div class="field"><label>Type</label><select data-note-field="type" data-note-id="${h(note.id)}">${optionList(noteTypes,note.type)}</select></div><div class="field name-field"><label>Agent context · notes · URLs · code examples</label><textarea data-note-field="body" data-note-id="${h(note.id)}" placeholder="Add requirements, explanations, links, pseudocode, use cases, or other context…">${h(note.body)}</textarea></div></div></div>`).join(''):'<p class="secondary-caption">No notes yet. New notes default to User_Note / low / note.</p>'}`;}
+function renderLedger(){const el=$('ledger');if(!state.ledger.length){el.innerHTML='<div class="empty">No exports yet.</div>';return}el.innerHTML=state.ledger.slice().reverse().slice(0,80).map(r=>`<div class="ledger-row"><div class="grow"><strong>${h(r.version)} · ${h(r.kind)}</strong><small>${h(r.timestamp)} · ${h(r.filename)} · ${Math.ceil(r.bytes/1024)} KB</small><div class="sha" title="SHA-256 of downloaded artifact">${h(r.sha256)}</div></div><button class="tiny" data-action="copy-sha" data-sha="${h(r.sha256||'')}" title="Copy displayed SHA-256" ${r.sha256Pending?'disabled':''}>Copy</button></div>`).join('')}
+function nextVersion(){return state.release.phase==='concept'?`V${state.release.base}-${state.release.counter+1}`:`V0.0.0.${state.release.nextOfficial}`}
+function updateRelease(){const v=nextVersion();$('versionBadge').textContent=v;$('releaseStatus').textContent=`${state.release.phase==='concept'?'Concept':'Official'} phase · next export ${v}`;$('officialBtn').disabled=state.release.phase==='official';$('officialBtn').textContent=state.release.phase==='official'?'Official phase active':'Promote to official phase'}
+function renderAll(){renderMeta();refreshPrompt();renderStats();renderTree();renderInspector();renderScratchpad();renderResourceList();renderResourceEditor();renderLedger();updateRelease();renderTemplates();renderPlanningTimeline();updatePlanningStatus()}
+function needProject(){if(!state.raw&&!state.nodes.length){toast('Import or generate a project tree first.');return false}return true}
+function siblingNameTaken(name,parentId,exceptId=null){return state.nodes.some(n=>n.parentId===parentId&&n.name===name&&n.id!==exceptId)}
+function addNode(kind){if(!requireLive())return;if(!needProject())return;let n=nodeById(selectedId);const parent=n?(n.kind==='folder'?n.id:n.parentId):null;const name=prompt(`New ${kind} name (single path segment):`,kind==='file'?'new-file.txt':'new-folder');if(name===null)return;if(!validName(name)){toast('Invalid node name: must be 1–180 characters, no slashes.');return}if(siblingNameTaken(name,parent)){toast('A sibling with that name already exists.');return}const newNode={id:id(),parentId:parent,name,kind,description:'',state:{visibility:'visible',inclusion:'included',core:false},createdAt:now(),updatedAt:now()};state.nodes.push(newNode);selectedId=newNode.id;if(parent)expanded.add(parent);audit('node_add',`Added ${kind} ${pathFor(newNode)}`,{nodeId:newNode.id});renderAll();toast(`Virtual ${kind} added`)}
+function moveNode(){if(!requireLive())return;const n=nodeById(selectedId);if(!n)return;const folders=state.nodes.filter(x=>x.kind==='folder'&&x.id!==n.id);const choices=['[root]',...folders.map(f=>pathFor(f))];const choice=prompt('Move '+pathFor(n)+' under which folder? Enter [root] or exact folder path:\n'+choices.join('\n'),n.parentId?pathFor(nodeById(n.parentId)):'[root]');if(choice===null)return;const dest=choice.trim()==='[root]'?null:folders.find(f=>pathFor(f)===choice.trim())?.id;if(dest===undefined){toast('Folder path not found.');return}let ancestor=dest;while(ancestor){if(ancestor===n.id){toast('Cannot move a folder into itself or a descendant.');return}ancestor=nodeById(ancestor)?.parentId||null}if(siblingNameTaken(n.name,dest,n.id)){toast('The destination already contains that name.');return}const previous=pathFor(n);if(n.parentId===dest)return;const reason=prompt('Why move this node? (Recommended for agent provenance)','')??'';n.parentId=dest;n.updatedAt=now();if(dest)expanded.add(dest);audit('node_move',`Moved ${previous} → ${pathFor(n)}`,{nodeId:n.id,reason});renderAll()}
+function renameNode(){if(!requireLive())return;const n=nodeById(selectedId);if(!n){toast('Select a node to rename.');return}const name=prompt('Rename virtual node:',n.name);if(name===null)return;if(!validName(name)){toast('Invalid node name: use a single path segment.');return}if(siblingNameTaken(name,n.parentId,n.id)){toast('A sibling with that name already exists.');return}const old=pathFor(n);n.name=name;n.updatedAt=now();audit('node_rename',`Renamed ${old} → ${pathFor(n)}`,{nodeId:n.id});renderAll()}
+function toggleHidden(){if(!requireLive())return;const n=nodeById(selectedId);if(!n)return;n.state.visibility=n.state.visibility==='visible'?'hidden':'visible';n.updatedAt=now();audit('node_visibility',`${pathFor(n)} visibility → ${n.state.visibility}`,{nodeId:n.id});renderAll()}
+function toggleExcluded(){if(!requireLive())return;const n=nodeById(selectedId);if(!n){toast('Select a node to exclude or restore.');return}const oldInclusion=n.state.inclusion;const reason=prompt(oldInclusion==='included'?'Why exclude this node? (Optional)':'Why restore this node? (Optional)','');if(reason===null)return;n.state.inclusion=oldInclusion==='included'?'excluded':'included';n.updatedAt=now();audit('node_inclusion',`${pathFor(n)} → ${n.state.inclusion}`,{nodeId:n.id,reason});renderAll()}
+function addNote(){if(!requireLive())return;const n=nodeById(selectedId);if(!n){toast('Select a file or folder first.');return}const note={id:id(),nodeId:n.id,name:'User_Note',importance:'low',type:'note',body:'',archived:false,createdAt:now(),updatedAt:now()};state.notes.push(note);audit('note_add',`Added note to ${pathFor(n)}`,{nodeId:n.id,noteId:note.id});renderInspector()}
+function archiveNote(noteId){if(!requireLive())return;const n=state.notes.find(x=>x.id===noteId);if(!n)return;n.archived=!n.archived;n.updatedAt=now();audit('note_archive',`${n.archived?'Archived':'Restored'} note ${n.name}`,{nodeId:n.nodeId,noteId:n.id});renderInspector()}
+function scaffoldTreeFromNodes(parentId=null){return childrenOf(parentId).map(n=>({...{name:n.name,kind:n.kind},...(n.description?{description:n.description}:{}),...(n.kind==='file'&&n.state.core?{core:true}:{}),...(n.kind==='folder'?{children:scaffoldTreeFromNodes(n.id)}:{})}))}
+function saveTemplate(){if(!requireTemplateSourcesReady()||!needProject())return;const label=prompt('Template name:',(state.project.name||'Untitled')+' template');if(label===null)return;if(!label.trim()){toast('Template name required.');return}templates.push({id:id(),name:label.trim(),timestamp:now(),tree:scaffoldTreeFromNodes(),keywords:clone(state.project.keywords)});const persisted=saveTemplates();renderTemplates();if(templateStoreConflict){status('TEMPLATE_SOURCE_CONFLICT · Template edit was written to browser storage, but primary and recovery stores now disagree. Backup and restore are blocked until explicit reconciliation. Both original source values are preserved.','error');return}status(persisted?'Template saved in browser storage.':'TEMPLATE_PERSISTENCE_FAILED · Template is session-only. Export Full Project ZIP. ',persisted?'ok':'error')}
+function createFromTemplate(){if(!requireTemplateSourcesReady())return;const t=templates.find(t=>t.id===$('templateSelect').value);if(!t){toast('Choose a saved template.');return}if(!checkDiscard())return;const p=emptyMeta();p.name=prompt('New project name:',t.name.replace(/ template$/i,'')+' copy')||'New project';p.status='concept';p.keywords=clone(t.keywords||emptyMeta().keywords);const doc={schema:SCHEMA,project:p,tree:clone(t.tree)};scaffoldValidate(doc);state=freshState();state.project=p;state.raw=JSON.stringify(doc,null,2);state.nodes=mapScaffold(doc);selectedId=state.nodes[0]?.id||null;selectedResourceId=null;expanded=new Set(state.nodes.filter(n=>n.kind==='folder').map(n=>n.id));$('jsonInput').value=state.raw;audit('template_create',`Created project from template ${t.name}`,{templateId:t.id});writeState();renderAll();status('New independent project created from template, with fresh IDs and reset flags/notes.','ok')}
+// Browser-local template content is independent, untrusted evidence. Corrupt bytes
+// are never silently dropped or overwritten during startup or ZIP restoration.
+// Two valid stores are peers, not an implicit primary/overlay chain.
+// Local resolution records are self-attested; they are not signed operator evidence.
+function templateSourceHashes(){
+ return {primary:templateSourceCopies.primary===null?null:shaFallback(utf8(templateSourceCopies.primary)),recovery:templateSourceCopies.recovery===null?null:shaFallback(utf8(templateSourceCopies.recovery))};
+}
+function candidateMerge(primary,recovery){
+ const result=clone(primary),seen=new Map(result.map(x=>[x.id,x]));
+ for(const t of recovery){
+  const existing=seen.get(t.id);
+  if(existing&&!deepEqual(existing,t))return null;
+  if(!existing){result.push(clone(t));seen.set(t.id,t)}
+ }
+ return result;
+}
+function readBrowserTemplates(){
+ templateQuarantine={};templateLoadWarning='';templateStorageWritable=true;
+ templateStoreConflict=false;templateResolution=null;templateDecisionCopy=null;templateMergeCandidate=null;
+ templatePriorResolution=null;templateResolutionSources=null;
+ let original=null,recovery=null,decisionBytes=null;
+ try{original=localStorage.getItem(TEMPLATE_KEY);recovery=localStorage.getItem(TEMPLATE_RECOVERY_KEY);decisionBytes=localStorage.getItem(TEMPLATE_RESOLUTION_KEY)}
+ catch(e){templates=[];templateStorageWritable=false;templateLoadWarning='TEMPLATE_STORAGE_UNAVAILABLE · Cannot read browser template storage; export a Full Project ZIP for this session.';return}
+ templateSourceCopies={primary:original,recovery};templateDecisionCopy=decisionBytes;
+ function readOne(key,value){
+  if(value===null)return null;
+  try{return validatedTemplates({format:'context-tree/templates-v1',templates:JSON.parse(value)})}
+  catch(e){templateQuarantine[key]=value;return null}
+ }
+ const primaryValid=readOne(TEMPLATE_KEY,original),recoveryValid=readOne(TEMPLATE_RECOVERY_KEY,recovery);
+ const hashes=templateSourceHashes();
+ // Read the third-key decision first, even when a primary key disappears or
+ // the originals become equal. It can contain extra templates that neither
+ // current original store carries. Never infer the absence of a conflict from
+ // the current primary/recovery relationship alone.
+ let priorInvalid=false;
+ if(decisionBytes!==null){
+  try{
+   const saved=JSON.parse(decisionBytes);
+   if(!saved||saved.format!=='context-tree/template-store-resolution/v1'||
+      !['primary','recovery','merge','resolved'].includes(saved.choice)||
+      typeof saved.reason!=='string'||!saved.reason.trim()||
+      !(saved.primarySha256===null||typeof saved.primarySha256==='string')||
+      !(saved.recoverySha256===null||typeof saved.recoverySha256==='string'))throw Error('Invalid resolution envelope');
+   const active=validatedTemplates({format:'context-tree/templates-v1',templates:saved.templates});
+   templatePriorResolution={...saved,templates:active};
+  }catch(e){priorInvalid=true;templateQuarantine[TEMPLATE_RESOLUTION_KEY]=decisionBytes}
+ }
+ if(templatePriorResolution&&!priorInvalid&&
+    templatePriorResolution.primarySha256===hashes.primary&&
+    templatePriorResolution.recoverySha256===hashes.recovery){
+  templates=clone(templatePriorResolution.templates);
+  templateResolution=templatePriorResolution;templateStorageTarget=TEMPLATE_RESOLUTION_KEY;
+  templateLoadWarning='TEMPLATE_SOURCE_RESOLVED_LOCAL · Prior third-key resolution is active; original template storage bytes remain preserved. This is not authenticated human identity.';
+  return;
+ }
+ const diverged=primaryValid!==null&&recoveryValid!==null&&!deepEqual(primaryValid,recoveryValid);
+ if(templatePriorResolution||priorInvalid||diverged){
+  // Explicitly preserve all three inputs for inspection and raw export.
+  templateQuarantine[TEMPLATE_KEY]=original;
+  templateQuarantine[TEMPLATE_RECOVERY_KEY]=recovery;
+  if(decisionBytes!==null)templateQuarantine[TEMPLATE_RESOLUTION_KEY]=decisionBytes;
+  templateResolutionSources={primary:primaryValid,recovery:recoveryValid,
+   resolved:templatePriorResolution?clone(templatePriorResolution.templates):null};
+  const available=Object.values(templateResolutionSources).filter(x=>x!==null);
+  templateMergeCandidate=available.length?clone(available[0]):null;
+  for(const collection of available.slice(1)){
+   if(templateMergeCandidate===null)break;
+   templateMergeCandidate=candidateMerge(templateMergeCandidate,collection);
+  }
+  templates=[];templateStoreConflict=true;templateStorageTarget=TEMPLATE_RESOLUTION_KEY;templateStorageWritable=false;
+  templateLoadWarning=templatePriorResolution||priorInvalid?
+   'TEMPLATE_RESOLUTION_STALE · TEMPLATE_SOURCE_CONFLICT · An existing third-key resolution no longer matches the original store fingerprints (or is invalid). Its templates may exist nowhere else. Backup, restore and edits are BLOCKED until explicit review. Export all three raw source values first.':
+   'TEMPLATE_SOURCE_CONFLICT · Two valid template stores disagree (primary: '+primaryValid.length+' templates; recovery: '+recoveryValid.length+' templates). Backup, restore and template changes are BLOCKED until an explicit choice. Export both raw sources before resolving.';
+  templateLoadWarning+=templateMergeCandidate===null?' Shared IDs conflict; automatic merge is unsafe.':' Compatible merge available.';
+  return;
+ }
+ templates=primaryValid!==null?primaryValid:recoveryValid!==null?recoveryValid:[];
+ templateStorageTarget=original!==null&&primaryValid===null?TEMPLATE_RECOVERY_KEY:recoveryValid!==null&&primaryValid===null?TEMPLATE_RECOVERY_KEY:TEMPLATE_KEY;
+ if(recovery!==null&&recoveryValid===null&&templateStorageTarget===TEMPLATE_RECOVERY_KEY)templateStorageWritable=false;
+ if(Object.keys(templateQuarantine).length)templateLoadWarning='TEMPLATE_RECOVERY_REQUIRED · Malformed browser-local template evidence preserved unchanged. Export original evidence; restored templates use a separate recovery slot when available.';
+ if(!templateStorageWritable)templateLoadWarning+=' TEMPLATE_PERSISTENCE_BLOCKED · Recovery slot is unavailable or malformed.';
+}
+function renderTemplateRecoveryNotice(){
+ const el=$('templateRecoveryNotice'),btn=$('templateRecoveryExport'),choices=$('templateSourceChoices');
+ el.classList.toggle('hidden',!templateLoadWarning);el.textContent=templateLoadWarning;
+ btn.classList.toggle('hidden',!Object.keys(templateQuarantine).length);
+ choices.classList.toggle('hidden',!templateStoreConflict);
+ choices.querySelector('[data-choice="merge"]').disabled=templateMergeCandidate===null;
+ for(const source of ['primary','recovery','resolved'])choices.querySelector('[data-choice="'+source+'"]').disabled=!templateResolutionSources||templateResolutionSources[source]===null;
+}
+function exportTemplateRecoveryEvidence(){
+ if(!Object.keys(templateQuarantine).length){status('No browser template evidence is held for recovery.','error');return}
+ const payload={format:'context-tree/browser-template-recovery-evidence/v1',capturedAt:now(),storageKeys:clone(templateQuarantine),note:'Original unmodified browser storage strings. No external authentication of the source or operator is claimed.'};
+ download(jsonBytes(payload),'context-tree-template-raw-recovery.json','application/json');
+ status('Exported original template storage evidence. Both browser keys remain untouched.','ok');
+}
+function resolveTemplateStores(choice){
+ if(!templateStoreConflict)return;
+ const sources=templateResolutionSources;
+ const selected=choice==='merge'?templateMergeCandidate:
+  ['primary','recovery','resolved'].includes(choice)?sources?.[choice]:null;
+ if(selected===null||selected===undefined){status('TEMPLATE_SOURCE_CONFLICT · Requested source or compatible merge is unavailable.','error');return}
+ let reason=prompt('Why choose '+choice+'? This may omit templates from another source. Both original store strings and the superseded resolution will be preserved as evidence.','Reviewed all available template sources.');
+ if(reason===null)return;reason=reason.trim();if(!reason){status('Template resolution requires a nonempty reason.','error');return}
+ try{
+  // Atomic compare-before-write over every source, including the third key.
+  if(localStorage.getItem(TEMPLATE_KEY)!==templateSourceCopies.primary||
+     localStorage.getItem(TEMPLATE_RECOVERY_KEY)!==templateSourceCopies.recovery||
+     localStorage.getItem(TEMPLATE_RESOLUTION_KEY)!==templateDecisionCopy)throw Error('Source changed since review');
+  const hashes=templateSourceHashes();
+  const decision={format:'context-tree/template-store-resolution/v1',primarySha256:hashes.primary,recoverySha256:hashes.recovery,
+   choice,reason,recordedAt:now(),templates:clone(selected)};
+  if(templateDecisionCopy!==null)decision.supersededResolutionRaw=templateDecisionCopy;
+  const text=JSON.stringify(decision);
+  localStorage.setItem(TEMPLATE_RESOLUTION_KEY,text);
+  if(localStorage.getItem(TEMPLATE_RESOLUTION_KEY)!==text)throw Error('Resolution storage readback mismatch');
+  templates=clone(selected);templateResolution=decision;templatePriorResolution=decision;templateDecisionCopy=text;
+  templateStoreConflict=false;templateStorageWritable=true;templateStorageTarget=TEMPLATE_RESOLUTION_KEY;
+  templateLoadWarning='TEMPLATE_SOURCE_RESOLVED_LOCAL · Selected '+choice+'. Original primary/recovery keys remain unchanged; previous third-key bytes are embedded in the new resolution record. Selection is self-attested.';
+  renderTemplates();status('TEMPLATE_SOURCE_RESOLVED_LOCAL · '+choice+' · Export Full Project ZIP to preserve the reviewed collection.','ok');
+ }catch(e){readBrowserTemplates();renderTemplates();status('TEMPLATE_SOURCE_CONFLICT · Selection not saved: '+e.message,'error')}
+}
+function requireTemplateSourcesReady(){
+ try{
+  const primary=localStorage.getItem(TEMPLATE_KEY),recovery=localStorage.getItem(TEMPLATE_RECOVERY_KEY);
+  if(primary!==templateSourceCopies.primary||recovery!==templateSourceCopies.recovery){readBrowserTemplates();renderTemplates();status('TEMPLATE_SOURCE_CHANGED · Recheck both browser stores before export or restore.','error');return false}
+  // Track presence as well as value, even when no resolution existed at startup.
+  // Another browser session may introduce a third-key resolution while this
+  // page still holds identical originals. Ignoring null -> value transitions
+  // would allow an incomplete portable backup until the next reload.
+  if(localStorage.getItem(TEMPLATE_RESOLUTION_KEY)!==templateDecisionCopy){
+   readBrowserTemplates();renderTemplates();
+   status('TEMPLATE_RESOLUTION_CHANGED · Third-key resolution appeared, disappeared, or changed. Review all current template sources before export or restore.','error');
+   return false;
+  }
+ }catch(e){
+  // Restricted origins may have no readable storage at all. Preserve the
+  // historical session-only workflow with an explicit persistent warning.
+  if(!templateStoreConflict&&templateLoadWarning.startsWith('TEMPLATE_STORAGE_UNAVAILABLE'))return true;
+  status('TEMPLATE_STORAGE_UNAVAILABLE · Cannot verify template source freshness.','error');return false
+ }
+ if(templateStoreConflict){status('TEMPLATE_SOURCE_CONFLICT · Resolve both valid template stores before export, restore, or template changes. Original bytes preserved.','error');return false}
+ return true;
+}
+function saveTemplates(){
+ if(!requireTemplateSourcesReady())return false;
+ if(!templateStorageWritable){
+  if(Object.keys(templateQuarantine).length){toast('Template recovery slot is blocked; export original evidence.');return false}
+  try{localStorage.getItem(templateStorageTarget);templateStorageWritable=true;templateLoadWarning='';renderTemplateRecoveryNotice()}
+  catch(e){toast('Template storage unavailable; export Full Project ZIP.');return false}
+ }
+ try{
+  const serialized=templateStorageTarget===TEMPLATE_RESOLUTION_KEY?
+    JSON.stringify({...templateResolution,templates:clone(templates)}):JSON.stringify(templates);
+  localStorage.setItem(templateStorageTarget,serialized);
+  if(localStorage.getItem(templateStorageTarget)!==serialized)throw Error('Template storage readback mismatch');
+  // Re-admit *both* stores after every successful write, including writes by
+  // this page. A cached freshness check alone only catches external writers:
+  // editing either previously-identical store can create valid divergence.
+  // No original value is overwritten during a subsequent resolution.
+  readBrowserTemplates();
+  renderTemplateRecoveryNotice();
+  if(templateStoreConflict)return false; // Bytes committed; portable backup is now blocked.
+  return true;
+ }catch(e){toast('Template autosave failed; export Full Project ZIP for preservation.');return false}
+}
+function renderTemplates(){const select=$('templateSelect'),prior=select.value;select.innerHTML='<option value="">Select a saved template…</option>'+templates.map(t=>`<option value="${h(t.id)}">${h(t.name)} · ${h(t.timestamp.slice(0,10))}</option>`).join('');select.value=templates.some(x=>x.id===prior)?prior:'';renderTemplateRecoveryNotice()}
+function deleteTemplate(){if(!requireTemplateSourcesReady())return;const tid=$('templateSelect').value;const t=templates.find(x=>x.id===tid);if(!t)return;if(!confirm(`Delete saved template "${t.name}" from browser storage? This does not affect projects.`))return;templates=templates.filter(x=>x.id!==tid);const persisted=saveTemplates();renderTemplates();if(templateStoreConflict)status('TEMPLATE_SOURCE_CONFLICT · Template deletion was written to browser storage, but primary and recovery stores now disagree. Backup and restore are blocked until explicit reconciliation.','error');else if(!persisted)status('TEMPLATE_PERSISTENCE_FAILED · Template deletion is session-only; export Full Project ZIP.','error')}
+function promoteOfficial(){if(state.release.phase==='official')return;if(!needProject())return;const next='V0.0.0.1';if(!confirm(`Mark this project OFFICIAL? Concept export versions end at V${state.release.base}-${state.release.counter}. The next export becomes ${next}, without a -x suffix. This is one-way in the current project.`))return;state.release.phase='official';state.release.nextOfficial=1;audit('phase_promote',`Promoted to official. First official export will be ${next}`);renderAll();toast('Official phase enabled; suffix removed on future exports')}
+// SHA-256: Web Crypto on supported local origins, with a pure-JS fallback for restricted file:// contexts.
+const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+function shaFallback(bytes){const data=bytes instanceof Uint8Array?bytes:new Uint8Array(bytes),l=data.length,hi=Math.floor(l/0x20000000),lo=(l*8)>>>0, padded=Math.ceil((l+9)/64)*64,msg=new Uint8Array(padded);msg.set(data);msg[l]=0x80;const dv=new DataView(msg.buffer);dv.setUint32(padded-8,hi);dv.setUint32(padded-4,lo);const H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];const W=new Uint32Array(64);const rr=(x,n)=>(x>>>n)|(x<<(32-n));for(let off=0;off<padded;off+=64){for(let j=0;j<16;j++)W[j]=dv.getUint32(off+j*4);for(let j=16;j<64;j++){const s0=rr(W[j-15],7)^rr(W[j-15],18)^(W[j-15]>>>3),s1=rr(W[j-2],17)^rr(W[j-2],19)^(W[j-2]>>>10);W[j]=(W[j-16]+s0+W[j-7]+s1)>>>0}let [a,b,c,d,e,f,g,hv]=H;for(let j=0;j<64;j++){const S1=rr(e,6)^rr(e,11)^rr(e,25),ch=(e&f)^(~e&g),t1=(hv+S1+ch+K[j]+W[j])>>>0,S0=rr(a,2)^rr(a,13)^rr(a,22),maj=(a&b)^(a&c)^(b&c),t2=(S0+maj)>>>0;hv=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0}const vals=[a,b,c,d,e,f,g,hv];for(let j=0;j<8;j++)H[j]=(H[j]+vals[j])>>>0}return H.map(n=>n.toString(16).padStart(8,'0')).join('')}
+async function sha256(bytes){const arr=bytes instanceof Uint8Array?bytes:new Uint8Array(bytes);if(globalThis.crypto?.subtle){try{const digest=await crypto.subtle.digest('SHA-256',arr);return Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('')}catch(e){}}return shaFallback(arr)}
+const utf8=s=>new TextEncoder().encode(s);
+function jsonBytes(obj){return utf8(JSON.stringify(obj,null,2)+'\n')}
+function download(bytes,filename,mime){const blob=new Blob([bytes],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000)}
+function nodeRecord(n){return {id:n.id,parentId:n.parentId,path:pathFor(n),name:n.name,kind:n.kind,description:n.description,state:clone(n.state),effectiveInclusion:effectiveExcluded(n)?'excluded':'included',createdAt:n.createdAt,updatedAt:n.updatedAt,notes:state.notes.filter(note=>note.nodeId===n.id).map(note=>clone(note))}}
+function compactNode(n){return {id:n.id,parentId:n.parentId,path:pathFor(n),kind:n.kind,name:n.name,description:n.description,visibility:n.state.visibility,core:n.state.core,notes:state.notes.filter(x=>x.nodeId===n.id&&!x.archived).map(x=>({id:x.id,name:x.name,importance:x.importance,type:x.type,body:x.body}))}}
+function payloadFor(kind){const nodes=state.nodes;const excluded=nodes.filter(n=>effectiveExcluded(n)).map(n=>({id:n.id,parentId:n.parentId,path:pathFor(n),name:n.name,kind:n.kind,explicitlyExcluded:n.state.inclusion==='excluded',reason:n.state.inclusion==='excluded'?'user_flag':'excluded_ancestor'}));const base={projectId:state.projectId,authority:clone(state.authority),planningRevision:state.planning?.revision||0,project:clone(state.project),sourceSchema:SCHEMA};const references={scratchpad:clone(state.scratchpad),resources:clone(state.resources),resourcePolicy:{priorityScale:{'1':'locally available / flexible convenience','10':'hard stop when unavailable or unsafe'},higherNumberMeansMoreCritical:true,notListedLanguageRequiresAgentReview:true,automaticTagsAreExactTextualMatches:true,resourceReferencesAreDescriptiveNotExecutable:true}};
+ if(kind==='tree_full')return {...base,rootIds:nodes.filter(n=>n.parentId===null).map(n=>n.id),nodes:nodes.map(nodeRecord),history:clone(state.history),exportLedger:clone(state.ledger),sourceRaw:state.raw,release:clone(state.release),planningEvidence:clone(state.planning),...references};
+ if(kind==='tree_context')return {...base,scope:'included_nodes_with_agent_notes',nodeCount:nodes.filter(n=>!effectiveExcluded(n)).length,nodes:nodes.filter(n=>!effectiveExcluded(n)).map(compactNode),excluded,...references,policy:{hiddenNodesRemainInAgentContext:true,excludedNodesAreNotDeleted:true,exclusionInheritedFromParent:true}};
+ if(kind==='tree_leafs')return {...base,scope:'included_terminal_file_nodes',files:nodes.filter(n=>n.kind==='file'&&!effectiveExcluded(n)).map(compactNode),excludedFiles:excluded.filter(x=>x.kind==='file')};
+ if(kind==='tree_core')return {...base,scope:'explicitly_marked_core_files_only',coreFiles:nodes.filter(n=>n.kind==='file'&&n.state.core&&!effectiveExcluded(n)).map(n=>({...compactNode(n),ancestors:ancestorPaths(n)})),excludedCoreFiles:nodes.filter(n=>n.kind==='file'&&n.state.core&&effectiveExcluded(n)).map(n=>({id:n.id,path:pathFor(n),excluded:true}))};
+ throw Error('Unknown export kind');}
+function metaKeywords(){return Object.fromEntries(keywordFields.map(k=>[k,keywordArray(state.project.keywords?.[k])]))}
+function projectSnapshotData(){const s=planningSnapshot();return {format:'context-tree/planning-snapshot-v1',revision:state.planning.revision,projectId:state.projectId,project:s.project,authority:s.authority,keywords:metaKeywords(),rawScaffold:s.raw,planningEvidence:clone(state.planning),rootIds:s.nodes.filter(x=>x.parentId===null).map(x=>x.id),nodes:s.nodes,notes:s.notes,resources:s.resources,scratchpad:s.scratchpad,createdAt:state.createdAt}}
+// An export envelope must never re-read mutable project identity after hashing.
+async function verifiedSnapshot(version,timestamp){flushPendingRevision();const data=projectSnapshotData(),projectId=data.projectId;const content=await sha256(jsonBytes(data));return {format:'context-tree/verified-snapshot-v1',projectId,version,timestamp,revision:data.revision,contentHash:{algorithm:'SHA-256',scope:PLANNING_SHA256_SCOPE,value:content},data}}
+function planningLedgerData(){flushPendingRevision();return {format:'context-tree/planning-ledger-v1',projectId:state.projectId,projectName:state.project.name,authority:clone(state.authority),baseRevision:state.planning.baseRevision,revision:state.planning.revision,migratedFromLegacy:state.planning.migratedFromLegacy,baseline:clone(state.planning.baseline),events:clone(state.planning.events)}}
+async function verifiedPlanningLedger(version,timestamp){const data=planningLedgerData(),digest=await sha256(jsonBytes(data));return {format:'context-tree/verified-ledger-v1',version,timestamp,revision:data.revision,sha256:{algorithm:'SHA-256',scope:PLANNING_SHA256_SCOPE,value:digest},data}}
+// Freeze both payload and wrapper metadata before the first asynchronous hash.
+async function packageJson(kind,version,timestamp){const payload=payloadFor(kind),keywords=metaKeywords(),payloadBytes=jsonBytes(payload),payloadHash=await sha256(payloadBytes);const contents={export:{format:'context-tree/export-v1',kind,version,timestamp,keywords,sha256:{algorithm:'SHA-256',scope:DATA_SHA256_SCOPE,value:payloadHash}},data:payload};return {bytes:jsonBytes(contents),payloadHash}}
+function zipCrc32(data){let crc=0xffffffff;for(let i=0;i<data.length;i++){crc^=data[i];for(let j=0;j<8;j++)crc=(crc>>>1)^((crc&1)?0xedb88320:0)}return (crc^0xffffffff)>>>0}
+function joinBytes(chunks){const size=chunks.reduce((s,x)=>s+x.length,0),out=new Uint8Array(size);let off=0;for(const c of chunks){out.set(c,off);off+=c.length}return out}
+function u16(d,v){d.push(v&255,(v>>>8)&255)}function u32(d,v){d.push(v&255,(v>>>8)&255,(v>>>16)&255,(v>>>24)&255)}
+function makeZip(entries){const locals=[],centrals=[];let offset=0;const date=new Date();const time=((date.getHours()&31)<<11)|((date.getMinutes()&63)<<5)|((Math.floor(date.getSeconds()/2))&31);const day=(((date.getFullYear()-1980)&127)<<9)|(((date.getMonth()+1)&15)<<5)|(date.getDate()&31);for(const [name,data] of entries){if(data.length>0xffffffff)throw Error('ZIP entry exceeds size limit.');const n=utf8(name),crc=zipCrc32(data),local=[];u32(local,0x04034b50);u16(local,20);u16(local,0x0800);u16(local,0);u16(local,time);u16(local,day);u32(local,crc);u32(local,data.length);u32(local,data.length);u16(local,n.length);u16(local,0);const lc=joinBytes([new Uint8Array(local),n,data]);locals.push(lc);const cd=[];u32(cd,0x02014b50);u16(cd,20);u16(cd,20);u16(cd,0x0800);u16(cd,0);u16(cd,time);u16(cd,day);u32(cd,crc);u32(cd,data.length);u32(cd,data.length);u16(cd,n.length);u16(cd,0);u16(cd,0);u16(cd,0);u16(cd,0);u32(cd,0);u32(cd,offset);centrals.push(joinBytes([new Uint8Array(cd),n]));offset+=lc.length}const central=joinBytes(centrals),end=[];u32(end,0x06054b50);u16(end,0);u16(end,0);u16(end,entries.length);u16(end,entries.length);u32(end,central.length);u32(end,offset);u16(end,0);return joinBytes([...locals,central,new Uint8Array(end)])}
+function extractStoredZip(bytes){
+ const dv=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);
+ let off=0,found=null,templateData=null,manifest=null;const records=new Map();
+ while(off+4<=bytes.length){
+  const sig=dv.getUint32(off,true);
+  if(sig===0x02014b50||sig===0x06054b50)break;
+  if(sig!==0x04034b50)throw Error('Invalid ZIP structure at offset '+off);
+  if(off+30>bytes.length)throw Error('ZIP local header incomplete');
+  const flags=dv.getUint16(off+6,true),method=dv.getUint16(off+8,true),crc=dv.getUint32(off+14,true),length=dv.getUint32(off+18,true),nameLen=dv.getUint16(off+26,true),extraLen=dv.getUint16(off+28,true);
+  if(flags&8)throw Error('ZIP data descriptors are unsupported. Use a ZIP exported by this app.');
+  if(method!==0)throw Error('Compressed ZIP not supported. Restore a ZIP exported by this app.');
+  const start=off+30,body=start+nameLen+extraLen,end=body+length;
+  if(end>bytes.length)throw Error('Truncated ZIP entry');
+  const name=new TextDecoder().decode(bytes.slice(start,start+nameLen)),data=bytes.slice(body,end);
+  if(zipCrc32(data)!==crc)throw Error(`ZIP CRC mismatch in ${name}`);
+  if(records.has(name))throw Error('Duplicate ZIP member: '+name);records.set(name,data);
+  if(name==='project_state.json')found=JSON.parse(new TextDecoder().decode(data));
+  if(name==='templates.json')templateData=JSON.parse(new TextDecoder().decode(data));
+  if(name==='manifest.json')manifest=JSON.parse(new TextDecoder().decode(data));
+  off=end;
+ }
+ // Central directory and end-of-directory must describe EXACTLY the local entries.
+ const centralStart=off;let centralCount=0;const centralNames=new Set();
+ while(off+4<=bytes.length&&dv.getUint32(off,true)===0x02014b50){
+  if(off+46>bytes.length)throw Error('Truncated ZIP central directory');
+  const flags=dv.getUint16(off+8,true),method=dv.getUint16(off+10,true),crc=dv.getUint32(off+16,true);
+  const compressed=dv.getUint32(off+20,true),uncompressed=dv.getUint32(off+24,true);
+  const nl=dv.getUint16(off+28,true),xl=dv.getUint16(off+30,true),cl=dv.getUint16(off+32,true);
+  const localOffset=dv.getUint32(off+42,true),end=off+46+nl+xl+cl;
+  if(end>bytes.length)throw Error('Truncated ZIP directory member');
+  const name=new TextDecoder().decode(bytes.slice(off+46,off+46+nl));
+  if(centralNames.has(name)||!records.has(name))throw Error('ZIP central/local member mismatch: '+name);
+  centralNames.add(name);
+  if(method!==0||(flags&8)||compressed!==uncompressed||uncompressed!==records.get(name).length||
+    zipCrc32(records.get(name))!==crc||localOffset>=centralStart||
+    dv.getUint32(localOffset,true)!==0x04034b50||
+    dv.getUint16(localOffset+26,true)!==nl||
+    new TextDecoder().decode(bytes.slice(localOffset+30,localOffset+30+nl))!==name)
+    throw Error('ZIP central/local metadata mismatch: '+name);
+  centralCount++;off=end;
+ }
+ if(off+22>bytes.length||dv.getUint32(off,true)!==0x06054b50)throw Error('ZIP end directory missing');
+ const count=dv.getUint16(off+10,true),centralSize=dv.getUint32(off+12,true),offset=dv.getUint32(off+16,true),commentLength=dv.getUint16(off+20,true);
+ if(dv.getUint16(off+4,true)!==0||dv.getUint16(off+6,true)!==0||
+    dv.getUint16(off+8,true)!==count||count!==centralCount||count!==records.size||
+    centralSize!==off-centralStart||offset!==centralStart||off+22+commentLength!==bytes.length)
+    throw Error('ZIP central directory count/offset/trailer mismatch');
+ if(found===null)throw Error('ZIP missing project_state.json.');
+ return {state:found,templates:templateData,manifest,records};
+}
+// Repair 020: generated ZIP envelope metadata is a required, closed contract.
+// Bytes and semantic metadata are independently checked; labels are not authority.
+const BUNDLE_SHA256_SCOPE='exact UTF-8 bytes for each named ZIP member';
+const DATA_SHA256_SCOPE='UTF-8 pretty-printed data payload with terminal LF';
+const PLANNING_SHA256_SCOPE='exact UTF-8 JSON of data (pretty, terminal LF)';
+const RESOURCE_REGISTRY_FORMAT='context-tree/resources-v1';
+const RESOURCE_PRIORITY_POLICY=Object.freeze({'1':'local convenience','10':'hard-stop dependency if unavailable or unsafe',higherNumberMeansMoreCritical:true});
+function canonicalHashLabel(label,scope){return label!==null&&typeof label==='object'&&
+ label.algorithm==='SHA-256'&&label.scope===scope&&
+ typeof label.value==='string'&&/^[a-f0-9]{64}$/.test(label.value)}
+// README.txt is a deterministic generated bundle member, not a free-form
+// authoritative statement by an external author. Any altered generated claim
+// is a semantic conflict, even when the member SHA has been recomputed.
+function canonicalBundleReadme(version,timestamp){return `Context Tree Studio · Offline project snapshot\nVersion: ${version}\nExported: ${timestamp}\n\nRestore: use the "Restore project" button in context_tree_studio.html and select this ZIP.\nAll scaffold items are virtual. No filesystem changes are performed.\nSaved structural templates are also included as templates.json.\nScratchpad and master resource registry are included separately for convenience.\nplanning_snapshot.json represents current state and planning_ledger.json records reversible revision steps.\n\nRaw JSON is the original imported scaffold. JSON export payloads have embedded SHA-256 checksums of their data payload. manifest.json has checksums for ZIP members. The ZIP's own SHA-256 is recorded in the local export ledger after creation (it cannot be placed inside the ZIP without changing the ZIP hash).\n\nTo reach official phase, use "Promote to official phase": the concept suffix -x is removed and official export versions begin at V0.0.0.1.\n`;}
+const FULL_PROJECT_REQUIRED_MEMBERS=Object.freeze([
+ 'tree_raw.json','tree_full.json','tree_context.json','tree_leafs.json',
+ 'tree_core.json','planning_snapshot.json','planning_ledger.json',
+ 'project_state.json','templates.json','scratchpad.txt',
+ 'resource_registry.json','README.txt','manifest.json'
+]);
+async function verifyBundle(bundle){
+ if(bundle.manifest?.format!=='context-tree/bundle-manifest-v1'||!Array.isArray(bundle.manifest.files))throw Error('ZIP missing supported checksum manifest.');
+ const expected=new Set(FULL_PROJECT_REQUIRED_MEMBERS),actual=new Set(bundle.records.keys());
+ for(const name of expected)if(!actual.has(name))throw Error('ZIP missing required member: '+name);
+ for(const name of actual)if(!expected.has(name))throw Error('ZIP contains unlisted member: '+name);
+ const declared=new Set();
+ for(const f of bundle.manifest.files){
+  if(typeof f?.name!=='string'||declared.has(f.name))throw Error('Duplicate or invalid manifest member');
+  declared.add(f.name);
+  if(!expected.has(f.name)||f.name==='manifest.json')throw Error('Unrecognized manifest member: '+f.name);
+  const member=bundle.records.get(f.name);
+  if(!member||member.length!==f.bytes||await sha256(member)!==f.sha256)throw Error('ZIP SHA-256 verification failed for '+f.name);
+ }
+ for(const name of expected)if(name!=='manifest.json'&&!declared.has(name))throw Error('Manifest omitted member: '+name);
+ if(declared.size!==expected.size-1)throw Error('ZIP manifest membership mismatch');
+ if(bundle.manifest.projectId!==bundle.state?.projectId)throw Error('Manifest project identity disagrees with canonical state');
+ validatedTemplates(bundle.templates);
+ for(const file of ['tree_full.json','tree_context.json','tree_leafs.json','tree_core.json','planning_snapshot.json','planning_ledger.json']){
+  const d=JSON.parse(new TextDecoder().decode(bundle.records.get(file)));
+  const expectedHash=file==='planning_snapshot.json'?d.contentHash?.value:file==='planning_ledger.json'?d.sha256?.value:d.export?.sha256?.value;
+  if(!expectedHash||expectedHash!==await sha256(jsonBytes(d.data)))throw Error('Export data checksum mismatch: '+file);
+ }
+}
+// Temporarily bind the imported state while computing its projections. The
+// projector is synchronous and read-only; restore the live session in finally.
+// Independent regression fixtures compare these against a separate Python oracle.
+function projectionForSavedState(p,kind){
+ const previous=state;
+ try{state=p;return payloadFor(kind)}
+ finally{state=previous}
+}
+// Accepted archive state must already be canonical. Normalizing a copy is only
+// diagnostic; a validator may not bless bytes that restore later rewrites.
+// Imported values remain untouched for provenance and independent review.
+function assertCanonicalSavedState(p){
+ const candidate=normalizeImportedState(clone(p));
+ for(const field of ['project','nodes','notes','resources','scratchpad','history','ledger','release','planning']){
+  if(!deepEqual(candidate[field],p[field]))throw Error('Noncanonical saved state: '+field);
+ }
+ return candidate;
+}
+function validateBundleSemantics(bundle){
+ const p=bundle.state,report=inspectAuthority(p);
+ const errors=[];
+ // Exact structural admission is shared with restore; verifier checks a clone,
+ // so neither format normalization nor failure changes the archive under test.
+ try{assertCanonicalSavedState(p)}catch(e){errors.push('restorable_structure:'+e.message)}
+ if(report.status==='CONFLICT'||report.status==='UNPROVEN')errors.push(...report.conflicts.map(x=>'authority:'+x));
+ if(bundle.manifest.projectId!==p.projectId)errors.push('manifest_projectId_drift');
+ if(bundle.manifest.planningRevision!==p.planning?.revision)errors.push('manifest_revision_drift');
+ if(!deepEqual(bundle.manifest.keywords,metaFromJson(p.project).keywords))errors.push('manifest_keyword_drift');
+ // The manifest is metadata ABOUT the saved state, not a separate authority.
+ // A rehashed, self-consistent archive can still contradict itself. Compare
+ // every duplicated envelope with the same immutable saved-state projection.
+ const meta=bundle.manifest;
+ const canonicalKeywords=metaFromJson(p.project).keywords;
+ if(typeof meta.version!=='string'||!/^V\d+\.\d+\.\d+\.\d+(?:-\d+)?$/.test(meta.version))errors.push('manifest_version_invalid');
+ if(typeof meta.timestamp!=='string'||!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(meta.timestamp)||
+    !Number.isFinite(Date.parse(meta.timestamp))||new Date(meta.timestamp).toISOString()!==meta.timestamp)errors.push('manifest_timestamp_invalid');
+ if(meta.sha256Scope!==BUNDLE_SHA256_SCOPE)errors.push('manifest_sha256_scope_invalid');
+ if(!deepEqual(meta.exportLedger,p.ledger))errors.push('manifest_export_ledger_drift');
+ const release=p.release;
+ if(release?.phase==='concept'&&meta.version!==`V${release.base}-${release.counter}`||
+    release?.phase==='official'&&meta.version!==`V0.0.0.${release.nextOfficial-1}`)
+    errors.push('manifest_version_release_drift');
+ try{
+  const raw=JSON.parse(new TextDecoder().decode(bundle.records.get('tree_raw.json')||new Uint8Array()));
+  if(!deepEqual(raw,JSON.parse(p.raw))||new TextDecoder().decode(bundle.records.get('tree_raw.json'))!==p.raw)errors.push('raw_scaffold_member_disagrees');
+ }catch(e){errors.push('invalid_raw_scaffold_member')}
+ errors.push(...inspectPlanningEvidence(p));
+ for(const kind of ['tree_full','tree_context','tree_leafs','tree_core']){
+  const file=kind+'.json';
+  try{
+   const obj=JSON.parse(new TextDecoder().decode(bundle.records.get(file)));
+   const expected=projectionForSavedState(p,kind);
+   if(kind==='tree_full'&&!Object.hasOwn(obj.data,'planningEvidence'))delete expected.planningEvidence;
+   if(obj.export?.kind!==kind||!deepEqual(obj.data,expected))errors.push('projection_'+file);
+   if(obj.export?.format!=='context-tree/export-v1'||
+      obj.export.version!==meta.version||obj.export.timestamp!==meta.timestamp||
+      !deepEqual(obj.export.keywords,canonicalKeywords)||
+      !canonicalHashLabel(obj.export?.sha256,DATA_SHA256_SCOPE))errors.push('export_envelope_'+file);
+  }catch(e){errors.push('invalid_'+file+':'+e.message)}
+ }
+ try{
+  const doc=JSON.parse(new TextDecoder().decode(bundle.records.get('planning_snapshot.json')));
+  const d=doc.data;
+   if(doc.format!=='context-tree/verified-snapshot-v1'||doc.projectId!==p.projectId||
+      doc.projectId!==d?.projectId||doc.revision!==p.planning?.revision||doc.revision!==d?.revision||
+      doc.version!==meta.version||doc.timestamp!==meta.timestamp||d?.format!=='context-tree/planning-snapshot-v1'||
+      !canonicalHashLabel(doc.contentHash,PLANNING_SHA256_SCOPE))
+      errors.push('snapshot_envelope_drift');
+  if(d?.projectId!==p.projectId||!deepEqual(metaFromJson(d.project),metaFromJson(p.project))||
+   !deepEqual(d.authority??null,p.authority??null)||d.rawScaffold!==p.raw||
+   !deepEqual(d.rootIds,p.nodes.filter(n=>n.parentId===null).map(n=>n.id))||
+   !deepEqual(d.keywords,metaFromJson(p.project).keywords)||
+   (Object.hasOwn(d,'planningEvidence')&&!deepEqual(d.planningEvidence,p.planning))||
+   !deepEqual(d.nodes,p.nodes)||!deepEqual(d.notes,p.notes)||
+   !deepEqual(d.resources,p.resources)||!deepEqual(d.scratchpad,p.scratchpad)||
+   d.createdAt!==p.createdAt||d.revision!==p.planning?.revision)errors.push('snapshot_state_drift');
+ }catch(e){errors.push('invalid_planning_snapshot.json')}
+ try{
+  const doc=JSON.parse(new TextDecoder().decode(bundle.records.get('planning_ledger.json'))),d=doc.data;
+   if(doc.format!=='context-tree/verified-ledger-v1'||doc.revision!==p.planning?.revision||
+      doc.revision!==d?.revision||doc.version!==meta.version||doc.timestamp!==meta.timestamp||
+      d?.format!=='context-tree/planning-ledger-v1'||d?.projectName!==p.project?.name||
+      d?.baseRevision!==p.planning?.baseRevision||d?.migratedFromLegacy!==p.planning?.migratedFromLegacy||
+      !canonicalHashLabel(doc.sha256,PLANNING_SHA256_SCOPE))
+      errors.push('ledger_envelope_drift');
+  if(d?.projectId!==p.projectId||d.revision!==p.planning?.revision||
+   !deepEqual(d.events,p.planning?.events)||!deepEqual(d.baseline,p.planning?.baseline)||
+   !deepEqual(d.authority??null,p.authority??null)||
+   !deepEqual(metaFromJson(replayLedgerProject(d)),metaFromJson(p.project)))errors.push('ledger_state_drift');
+ }catch(e){errors.push('invalid_planning_ledger.json')}
+ try{
+  const doc=JSON.parse(new TextDecoder().decode(bundle.records.get('resource_registry.json')));
+  if(doc?.format!==RESOURCE_REGISTRY_FORMAT||!deepEqual(doc.priorityPolicy,RESOURCE_PRIORITY_POLICY)||
+      doc.projectId!==p.projectId||!deepEqual(doc.resources,p.resources)||
+      !deepEqual(doc.keywords,metaFromJson(p.project).keywords))errors.push('resource_registry_drift');
+  if(new TextDecoder().decode(bundle.records.get('scratchpad.txt'))!==p.scratchpad?.body)errors.push('scratchpad_drift');
+  const readmeText=new TextDecoder('utf-8',{fatal:true}).decode(bundle.records.get('README.txt'));
+  if(readmeText!==canonicalBundleReadme(meta.version,meta.timestamp))errors.push('readme_generated_claims_drift');
+ }catch(e){errors.push('invalid_resource_or_scratchpad')}
+ try{
+  const validated=validatedTemplates(bundle.templates);
+  if(!Array.isArray(validated))errors.push('templates_invalid');
+ }catch(e){errors.push('templates_invalid:'+e.message)}
+ return {status:errors.length?'SEMANTICS_CONFLICT':'SEMANTICS_VALID',errors};
+}
+// Validate every historical state against the same structural admission rules as
+// restoration. Operate only on copies: historical evidence is never rewritten.
+function assertReplayStateStructure(snapshot){
+ const candidate={format:PROJECT_FORMAT,projectId:snapshot.projectId,project:clone(snapshot.project),
+  authority:clone(snapshot.authority??null),raw:snapshot.raw,nodes:clone(snapshot.nodes),
+  notes:clone(snapshot.notes),resources:clone(snapshot.resources),scratchpad:clone(snapshot.scratchpad),
+  history:[],ledger:[],planning:null,release:{phase:'concept',base:'0.0.0.0',counter:0,nextOfficial:1}};
+ const admitted=normalizeImportedState(clone(candidate),true);
+ for(const field of ['project','nodes','notes','resources','scratchpad']){
+  if(!deepEqual(admitted[field],candidate[field]))throw Error('Noncanonical planning state: '+field);
+ }
+}
+function inspectPlanningEvidence(p){
+ const errors=[];const planning=p?.planning;
+ if(!planning||!Array.isArray(planning.events)||!planning.baseline||planning.revision!==planning.events.length)return ['planning_revision_count'];
+ try{
+  let prev=null,snap=clone(planning.baseline);
+  try{assertReplayStateStructure(snap)}catch(e){throw Error('baseline_structure:'+e.message)}
+  for(let i=0;i<planning.events.length;i++){
+   const ev=planning.events[i],copy={...ev};delete copy.sha256;
+   if(ev.revision!==i+1||ev.previousHash!==prev||shaFallback(jsonBytes(copy))!==ev.sha256)throw Error('event_'+(i+1));
+   assertPlanningPredecessors(snap,ev.changes);snap=applyPlanningChanges(snap,ev.changes);try{assertReplayStateStructure(snap)}catch(e){throw Error('revision_'+ev.revision+'_structure:'+e.message)}prev=ev.sha256;
+  }
+  for(const field of ['projectId',...planningFields]){
+   const x=field==='authority'?(snap[field]??null):snap[field],y=field==='authority'?(p[field]??null):p[field];
+   if(!deepEqual(x,y))errors.push('planning_replay_'+field);
+  }
+ }catch(e){errors.push('planning_invalid:'+e.message)}
+ return errors;
+}
+function semanticStandalonePayload(type,doc,data){
+ const errors=[];let p=null;
+ if(type==='Planning ledger'){
+  try{
+   const x=clone(data.baseline);for(const ev of data.events||[])Object.assign(x,applyPlanningChanges(x,ev.changes));
+   p={...x,projectId:data.projectId,planning:{baseline:data.baseline,events:data.events,revision:data.revision}};
+   if(p.projectId!==x.projectId||!deepEqual(data.authority??null,p.authority??null)||data.projectName!==p.project?.name)errors.push('ledger_identity_drift');
+   if(doc.format!=='context-tree/verified-ledger-v1'||doc.revision!==data.revision||
+      typeof doc.version!=='string'||!doc.version.trim()||
+      typeof doc.timestamp!=='string'||!Number.isFinite(Date.parse(doc.timestamp)))errors.push('ledger_envelope_invalid');
+  }catch(e){errors.push('invalid_ledger_replay:'+e.message)}
+ }else if(type==='Planning snapshot'||type==='tree_full'){
+  const isSnapshot=type==='Planning snapshot',nodes=isSnapshot?data.nodes:data.nodes;
+  p={projectId:data.projectId,raw:isSnapshot?data.rawScaffold:data.sourceRaw,project:data.project,authority:data.authority,
+   nodes:isSnapshot?nodes:nodes.map(n=>({id:n.id,parentId:n.parentId,name:n.name,kind:n.kind,description:n.description,state:n.state,createdAt:n.createdAt,updatedAt:n.updatedAt})),
+   notes:isSnapshot?data.notes:nodes.flatMap(n=>Array.isArray(n.notes)?n.notes:[]),resources:data.resources,
+   scratchpad:isSnapshot?data.scratchpad:data.scratchpad,
+   planning:data.planningEvidence};
+  if(!Array.isArray(nodes))errors.push('missing_nodes');
+  else {
+   const roots=nodes.filter(n=>n.parentId===null).map(n=>n.id);
+   if(!deepEqual(data.rootIds,roots))errors.push('snapshot_root_ids');
+   if(new Set(nodes.map(n=>n.id)).size!==nodes.length)errors.push('duplicate_node_identity');
+  }
+  if(isSnapshot){
+   if(doc.projectId!==data.projectId||doc.revision!==data.revision||data.revision!==p.planning?.revision)errors.push('snapshot_identity_drift');
+   if(!deepEqual(data.keywords,metaFromJson(data.project).keywords))errors.push('snapshot_keyword_drift');
+   if(doc.format!=='context-tree/verified-snapshot-v1'||typeof doc.version!=='string'||!doc.version.trim()||
+      typeof doc.timestamp!=='string'||!Number.isFinite(Date.parse(doc.timestamp)))errors.push('snapshot_envelope_invalid');
+  }else {
+   if(data.planningRevision!==p.planning?.revision)errors.push('full_revision_drift');
+   // A standalone tree_full envelope must describe the *same* project's
+   // keywords as its embedded tree. Hash-valid metadata drift is a conflict.
+   if(!deepEqual(doc.export?.keywords,metaFromJson(data.project).keywords))errors.push('full_export_keyword_drift');
+   if(doc.export?.format!=='context-tree/export-v1'||doc.export?.kind!=='tree_full'||
+      typeof doc.export.version!=='string'||!doc.export.version.trim()||
+      typeof doc.export.timestamp!=='string'||!Number.isFinite(Date.parse(doc.export.timestamp)))errors.push('full_export_envelope_invalid');
+  }
+ }else return {status:'SEMANTICS_UNPROVEN',errors:['insufficient_source_context']};
+ if(p){
+  // The same saved-state admission contract also guards restorable standalone
+  // snapshots, ledgers, and full-tree exports. Missing wrapper fields here are
+  // export-format metadata, never fabricated project authority evidence.
+  try{normalizeImportedState(clone({...p,format:PROJECT_FORMAT,history:[],ledger:[],
+   release:{phase:'concept',base:'0.0.0.0',counter:0,nextOfficial:1}}))}
+  catch(e){errors.push('restorable_structure:'+e.message)}
+  errors.push(...inspectPlanningEvidence(p));
+  const auth=inspectAuthority(p);
+  if(!['VALID','VALID_LEGACY'].includes(auth.status))errors.push(...auth.conflicts.map(x=>'authority:'+x));
+ }
+ return {status:errors.length?'SEMANTICS_CONFLICT':'SEMANTICS_VALID',errors};
+}
+function replayLedgerProject(data){let x=clone(data.baseline);for(const ev of data.events||[])x=applyPlanningChanges(x,ev.changes);return x.project}
+// A ZIP is one logical revision. Capture every mutable project/template input
+// synchronously, BEFORE the first await, then hash and serialize captured bytes.
+// No live state or template lookup may occur during asynchronous ZIP assembly.
+async function fullProjectZip(version,timestamp){
+ if(!requireTemplateSourcesReady())throw Error('Template stores unresolved or changed');
+ validatedTemplates({format:'context-tree/templates-v1',templates});
+ flushPendingRevision();
+ const liveState=state;
+ const frozenState=clone(state),frozenTemplates=clone(templates);
+ let raw,treePayloads,snapshotData,ledgerData,restoreState,resourceRegistry,meta;
+ try{
+  // Projectors are synchronous and rely on the global state object. The
+  // temporary binding is non-reentrant because there is no await in this block.
+  state=frozenState;
+  raw=utf8(state.raw);
+  treePayloads=['tree_full','tree_context','tree_leafs','tree_core'].map(kind=>({kind,data:payloadFor(kind),keywords:metaKeywords()}));
+  snapshotData=projectSnapshotData();
+  ledgerData=planningLedgerData();
+  restoreState={...clone(state),format:PROJECT_FORMAT};
+  resourceRegistry={format:RESOURCE_REGISTRY_FORMAT,projectId:state.projectId,resources:clone(state.resources),keywords:metaKeywords(),priorityPolicy:clone(RESOURCE_PRIORITY_POLICY)};
+  meta={projectId:state.projectId,planningRevision:state.planning.revision,keywords:metaKeywords(),exportLedger:clone(state.ledger),scratchpad:state.scratchpad.body};
+ }finally{state=liveState}
+ const parts=[['tree_raw.json',raw]];
+ for(const p of treePayloads){
+  const payloadHash=await sha256(jsonBytes(p.data));
+  parts.push([p.kind+'.json',jsonBytes({export:{format:'context-tree/export-v1',kind:p.kind,version,timestamp,keywords:p.keywords,sha256:{algorithm:'SHA-256',scope:DATA_SHA256_SCOPE,value:payloadHash}},data:p.data})]);
+ }
+ parts.push(['planning_snapshot.json',jsonBytes({format:'context-tree/verified-snapshot-v1',projectId:meta.projectId,version,timestamp,revision:snapshotData.revision,contentHash:{algorithm:'SHA-256',scope:PLANNING_SHA256_SCOPE,value:await sha256(jsonBytes(snapshotData))},data:snapshotData})]);
+ parts.push(['planning_ledger.json',jsonBytes({format:'context-tree/verified-ledger-v1',version,timestamp,revision:ledgerData.revision,sha256:{algorithm:'SHA-256',scope:PLANNING_SHA256_SCOPE,value:await sha256(jsonBytes(ledgerData))},data:ledgerData})]);
+ parts.push(['project_state.json',jsonBytes(restoreState)]);
+ parts.push(['templates.json',jsonBytes({format:'context-tree/templates-v1',templates:frozenTemplates})]);
+ parts.push(['scratchpad.txt',utf8(meta.scratchpad)]);
+ parts.push(['resource_registry.json',jsonBytes(resourceRegistry)]);
+ const shaList=[];
+ for(const [name,bytes] of parts)shaList.push({name,bytes:bytes.length,sha256:await sha256(bytes)});
+ const readme=canonicalBundleReadme(version,timestamp);
+ parts.push(['README.txt',utf8(readme)]);
+ shaList.push({name:'README.txt',bytes:utf8(readme).length,sha256:await sha256(utf8(readme))});
+ const manifest={format:'context-tree/bundle-manifest-v1',version,timestamp,projectId:meta.projectId,planningRevision:meta.planningRevision,keywords:meta.keywords,sha256Scope:BUNDLE_SHA256_SCOPE,files:shaList,exportLedger:meta.exportLedger,notes:'The ZIP SHA-256 is saved in the app export ledger after download.'};
+ parts.push(['manifest.json',jsonBytes(manifest)]);
+ const bytes=makeZip(parts);
+ // Apply the very same checks used when a user verifies an uploaded archive.
+ const bundle=extractStoredZip(bytes);
+ await verifyBundle(bundle);
+ const semantic=validateBundleSemantics(bundle);
+ if(semantic.status!=='SEMANTICS_VALID')throw Error('Generated ZIP failed semantic verification: '+semantic.errors.join(', '));
+ return bytes;
+}
+function advanceVersion(){if(state.release.phase==='concept')state.release.counter++;else state.release.nextOfficial++}
+// An export is a transaction of the originating project object, not "whatever"
+// state happens to be active after a promise resumes. This also covers every
+// standalone JSON kind, not just the Full Project ZIP.
+async function doExport(kind){
+ if(busy||!needProject()||!requireTemplateSourcesReady())return;
+ try{flushPendingRevision();assertSemanticAuthority(state)}catch(e){status('Export BLOCKED · '+e.message,'error');return}
+ busy=true;
+ const originState=state;
+ let pending=null,prePhase=null;
+ try{
+  flushPendingRevision();
+  const version=nextVersion(),timestamp=now(),name=`${slug(state.project.name)}_${version}_${kind}${kind==='full_project'?'.zip':'.json'}`;
+  const originKeywords=metaKeywords();
+  let bytes,payloadHash=null;
+  if(kind==='full_project'){
+   // Provisional receipt and release advance belong solely to originState.
+   prePhase=clone(originState.release);
+   pending={id:id(),version,kind,filename:name,timestamp,sha256:null,payloadSha256:null,bytes:null,keywords:clone(originKeywords),sha256Pending:true};
+   advanceVersion();
+   originState.ledger.push(pending);
+  }
+  // Fingerprint is taken after intentional provisional updates and before any
+  // await. It is *also* checked by identity, preventing same-value project swaps.
+  const originFingerprint=JSON.stringify(originState),templateFingerprint=JSON.stringify(templates);
+  if(kind==='full_project')bytes=await fullProjectZip(version,timestamp);
+  else if(kind==='tree_raw')bytes=utf8(originState.raw);
+  else if(kind==='planning_snapshot')bytes=jsonBytes(await verifiedSnapshot(version,timestamp));
+  else if(kind==='planning_ledger')bytes=jsonBytes(await verifiedPlanningLedger(version,timestamp));
+  else{const generated=await packageJson(kind,version,timestamp);bytes=generated.bytes;payloadHash=generated.payloadHash}
+  const checksum=await sha256(bytes);
+  // No await between the final authority/state guard and the download. An
+  // abandoned export is not allowed to commit to a replacement project.
+  if(!requireTemplateSourcesReady())throw Error('Template authority changed during export; download blocked.');
+  if(state!==originState||JSON.stringify(originState)!==originFingerprint||JSON.stringify(templates)!==templateFingerprint)
+   throw Error('Project or templates changed during export; retry from the current revision.');
+  download(bytes,name,kind==='full_project'?'application/zip':'application/json');
+  if(pending){pending.sha256=checksum;pending.bytes=bytes.length;pending.sha256Pending=false;pending=null}
+  else{advanceVersion();originState.ledger.push({id:id(),version,kind,filename:name,timestamp,sha256:checksum,payloadSha256:payloadHash,bytes:bytes.length,keywords:originKeywords})}
+  audit('export',`Exported ${kind} as ${version}`,{sha256:checksum,filename:name});
+  writeState();renderLedger();updateRelease();status(`Exported ${name} · SHA-256 ${checksum}`,'ok');toast(`${version} · ${kind} exported`);
+ }catch(e){
+  // Roll back only the originating object. Project replacement during await
+  // must never rewrite the replacement project's release/receipts/autosave.
+  if(pending){originState.ledger=originState.ledger.filter(x=>x.id!==pending.id);originState.release=prePhase}
+  status(`Export failed: ${e.message}`,'error');
+ }finally{busy=false}
+}
+// Receipts are historical evidence, not arbitrary display objects. A pending
+// self-referential ZIP receipt is the only supported null-hash case.
+function validateSavedExportReceipts(receipts){
+ if(!Array.isArray(receipts))throw Error('Invalid saved export ledger: expected array; explicit migration required.');
+ const ids=new Set();
+ for(let i=0;i<receipts.length;i++){
+  const r=receipts[i];
+  if(!r||typeof r!=='object'||Array.isArray(r))throw Error('Invalid export receipt at index '+i+': expected object.');
+  if(!canonicalObjectId(r.id)||ids.has(r.id))throw Error('Missing, unsafe, or duplicate export receipt ID at index '+i+'.');
+  ids.add(r.id);
+  for(const field of ['version','kind','filename','timestamp'])if(typeof r[field]!=='string'||!r[field].trim())throw Error('Invalid export receipt '+field+' at index '+i+'.');
+  if(typeof r.sha256Pending!=='undefined'&&typeof r.sha256Pending!=='boolean')throw Error('Invalid export receipt pending flag at index '+i+'.');
+  if(r.sha256Pending===true){
+   if(r.sha256!==null||r.bytes!==null||r.payloadSha256!==null)throw Error('Invalid pending export receipt at index '+i+'.');
+  }else{
+   if(typeof r.sha256!=='string'||!/^[a-fA-F0-9]{64}$/.test(r.sha256))throw Error('Invalid export receipt SHA-256 at index '+i+'.');
+   if(!Number.isSafeInteger(r.bytes)||r.bytes<0)throw Error('Invalid export receipt size at index '+i+'.');
+   if(r.payloadSha256!==null&&r.payloadSha256!==undefined&&
+      (typeof r.payloadSha256!=='string'||!/^[a-fA-F0-9]{64}$/.test(r.payloadSha256)))throw Error('Invalid receipt payload SHA-256 at index '+i+'.');
+  }
+  if(!r.keywords||typeof r.keywords!=='object'||Array.isArray(r.keywords)||
+    keywordFields.some(k=>!Array.isArray(r.keywords[k])||r.keywords[k].some(v=>typeof v!=='string')))
+    throw Error('Invalid export receipt keywords at index '+i+'.');
+ }
+ return receipts;
+}
+function normalizeImportedState(p,structureOnly=false){if(!p||p.format!==PROJECT_FORMAT||!Array.isArray(p.nodes)||typeof p.raw!=='string')throw Error('Not a restorable project_state.json or full_project ZIP.');if(typeof p.projectId!=='string'||!canonicalObjectId(p.projectId))throw Error('Invalid projectId: expected a canonical nonempty string.');if(p.nodes.length>15000)throw Error('Project contains too many nodes.');if(p.raw){let importedRaw;try{importedRaw=JSON.parse(p.raw);scaffoldValidate(importedRaw);if(!importedRaw.project)throw Error('Original scaffold missing project');}catch(e){throw Error('Invalid original scaffold: '+e.message)}}else if(p.nodes.length)throw Error('Saved nodes require original scaffold evidence.');const seen=new Set();for(const n of p.nodes){if(!n||!canonicalObjectId(n.id)||seen.has(n.id))throw Error('Missing, unsafe, or duplicated node ID.');seen.add(n.id);if(!validName(n.name)||!['file','folder'].includes(n.kind))throw Error('Invalid saved node.');if(!n.state||!['visible','hidden'].includes(n.state.visibility)||!['included','excluded'].includes(n.state.inclusion))throw Error('Invalid node state.');n.state.core=Boolean(n.kind==='file'&&n.state.core)}const parentMap=new Map(p.nodes.map(n=>[n.id,n]));const siblingPaths=new Set();for(const n of p.nodes){const parent=n.parentId===null?'ROOT':JSON.stringify(n.parentId);const siblingKey=JSON.stringify([parent,n.name]);if(siblingPaths.has(siblingKey))throw Error('Duplicate sibling name in saved tree: '+n.name);siblingPaths.add(siblingKey);}for(const n of p.nodes){if(n.parentId!==null){const pr=parentMap.get(n.parentId);if(!pr||pr.kind!=='folder')throw Error('Node parent must exist and be a folder.')}let x=n,checked=new Set();while(x){if(checked.has(x.id))throw Error('Cycle in saved tree.');checked.add(x.id);x=x.parentId?parentMap.get(x.parentId):null}}p.notes=Array.isArray(p.notes)?p.notes:[];p.scratchpad=validateScratchpad(p.scratchpad);p.resources=validateResources(p.resources);const seenNoteIds=new Set();for(const note of p.notes){if(!note||!canonicalObjectId(note.id))throw Error('Missing or unsafe note ID.');if(seenNoteIds.has(note.id))throw Error('Duplicate note ID: '+note.id);seenNoteIds.add(note.id);if(!seen.has(note.nodeId))throw Error('Note points to a missing node.');if(!importanceLevels.includes(note.importance)||!noteTypes.includes(note.type))throw Error('Invalid saved note type or importance.')}if(!Array.isArray(p.history))throw Error('Invalid saved history: expected array; explicit migration required.');validateSavedExportReceipts(p.ledger);p.release=p.release||{phase:'concept',base:'0.0.0.0',counter:0,nextOfficial:1};if(!['concept','official'].includes(p.release.phase))throw Error('Invalid saved version phase.');if(!Number.isSafeInteger(p.release.counter)||p.release.counter<0||!Number.isSafeInteger(p.release.nextOfficial)||p.release.nextOfficial<1)throw Error('Invalid saved version counter.');p.project=metaFromJson(p.project);p.format=PROJECT_FORMAT;if(structureOnly)return p;if(!p.planning||!p.planning.baseline||!Array.isArray(p.planning.events)){p.planning={format:'context-tree/planning-ledger-v1',baseline:{projectId:p.projectId,project:clone(p.project),raw:p.raw,nodes:clone(p.nodes),notes:clone(p.notes),resources:clone(p.resources),scratchpad:clone(p.scratchpad)},baseRevision:0,revision:0,events:[],migratedFromLegacy:true,startedAt:now()}}else if(p.planning.revision!==p.planning.events.length){throw Error('Planning revision/event count mismatch')}if(p.planning.baseline)assertReplayStateStructure(p.planning.baseline);if(p.planning.events.length){let replayed=clone(p.planning.baseline);assertReplayStateStructure(replayed);let prevHash=null;for(let i=0;i<p.planning.events.length;i++){const ev=p.planning.events[i];if(ev.revision!==i+1||ev.previousHash!==prevHash)throw Error('Planning event revision/hash-chain mismatch');const unhashed={...ev};delete unhashed.sha256;if(shaFallback(jsonBytes(unhashed))!==ev.sha256)throw Error('Planning event checksum mismatch');assertPlanningPredecessors(replayed,ev.changes);replayed=applyPlanningChanges(replayed,ev.changes);try{assertReplayStateStructure(replayed)}catch(e){throw Error('Invalid planning revision '+ev.revision+': '+e.message)}prevHash=ev.sha256}for(const field of planningFields)if(!deepEqual(field==='authority'?(replayed[field]??null):replayed[field],field==='authority'?(p[field]??null):(field==='project'?p.project:p[field])))throw Error('Planning history does not match restored current state: '+field)}return p}
+function recoverFullJson(json,bytes,fileName){
+ if(json?.export?.kind!=='tree_full'||json?.export?.format!=='context-tree/export-v1'||!json.data)throw Error('Not a restorable project state or tree_full export.');
+ const d=json.data;
+ const nodes=d.nodes.map(n=>({id:n.id,parentId:n.parentId,name:n.name,kind:n.kind,description:n.description||'',state:n.state,createdAt:n.createdAt||now(),updatedAt:n.updatedAt||now()}));
+ const notes=d.nodes.flatMap(n=>Array.isArray(n.notes)?n.notes:[]);
+ const release=clone(d.release||{phase:'concept',base:'0.0.0.0',counter:0,nextOfficial:1});
+ const v=String(json.export.version||'');
+ const concept=v.match(/^V(\d+\.\d+\.\d+\.\d+)-(\d+)$/);
+ const official=v.match(/^V0\.0\.0\.(\d+)$/);
+ if(concept){release.phase='concept';release.base=concept[1];release.counter=Math.max(Number(release.counter)||0,Number(concept[2]))}
+ else if(official){release.phase='official';release.nextOfficial=Math.max(Number(release.nextOfficial)||1,Number(official[1])+1)}
+ else throw Error('Unrecognized export version for restoration.');
+ const ledger=clone(d.exportLedger||[]);
+ ledger.push({id:id(),version:v,kind:'tree_full',filename:fileName,timestamp:json.export.timestamp||now(),sha256:shaFallback(bytes),payloadSha256:json.export.sha256?.value||null,bytes:bytes.length,keywords:json.export.keywords||{}});
+ return {format:PROJECT_FORMAT,projectId:d.projectId||id(),project:d.project||emptyMeta(),authority:d.authority||null,raw:d.sourceRaw||'',nodes,notes,scratchpad:validateScratchpad(d.scratchpad),resources:validateResources(d.resources),planning:d.planning||null,history:clone(d.history||[]),ledger,release,createdAt:now(),updatedAt:now()};
+}
+function validatedTemplates(d){
+ if(!d||d.format!=='context-tree/templates-v1'||!Array.isArray(d.templates))throw Error('Invalid templates member format or list.');
+ if(d.templates.length>500)throw Error('Too many templates in bundle.');
+ const seen=new Set();
+ return d.templates.map(t=>{
+  if(!t||!canonicalObjectId(t.id)||typeof t.name!=='string'||!t.name.trim()||t.name.length>180||!Array.isArray(t.tree))throw Error('Invalid bundled template.');
+  if(seen.has(t.id))throw Error('Duplicate template ID: '+t.id);
+  seen.add(t.id);
+  // Do not manufacture a timestamp during restore. The renderer assumes a string,
+  // and replacing malformed evidence with now() would hide an invalid archive.
+  if(typeof t.timestamp!=='string'||!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(t.timestamp)||!Number.isFinite(Date.parse(t.timestamp))||new Date(t.timestamp).toISOString()!==t.timestamp)throw Error('Invalid bundled template timestamp.');
+  scaffoldValidate({schema:SCHEMA,tree:t.tree});
+  // A validated template is preserved byte-for-byte at the JSON field level:
+  // no lossy keyword normalization, timestamp replacement, or field filtering.
+  return clone(t);
+ });
+}
+async function verifyExportFile(file){if(!file)return;const el=$('verifyResult');el.textContent='Checking '+file.name+'…';el.className='status-line';try{const bytes=new Uint8Array(await file.arrayBuffer());if(bytes.length>15000000)throw Error('File exceeds 15 MB verification limit');let type,revision=null,semantic={status:'SEMANTICS_UNPROVEN',errors:['missing_canonical_source_context']};if(file.name.toLowerCase().endsWith('.zip')){const bundle=extractStoredZip(bytes);await verifyBundle(bundle);type='Full project ZIP';revision=bundle.manifest?.planningRevision??null;semantic=validateBundleSemantics(bundle)}else{const doc=JSON.parse(new TextDecoder().decode(bytes));let expected=null,payload=null;
+ if(doc.format==='context-tree/verified-snapshot-v1'){type='Planning snapshot';revision=doc.revision;expected=doc.contentHash?.value;payload=doc.data}
+ else if(doc.format==='context-tree/verified-ledger-v1'){type='Planning ledger';revision=doc.revision;expected=doc.sha256?.value;payload=doc.data}
+ else if(doc.export?.sha256?.value&&doc.data){type=doc.export.kind;revision=doc.data.planningRevision??null;expected=doc.export.sha256.value;payload=doc.data}
+ else throw Error('No supported embedded checksum. Raw scaffolds need a separately recorded checksum.');
+ if(!expected||await sha256(jsonBytes(payload))!==expected)throw Error('Payload SHA-256 mismatch');
+ if(type==='Planning snapshot'||type==='Planning ledger'||type==='tree_full'){
+  semantic=semanticStandalonePayload(type,doc,payload);
+ }else if(payload?.project&&payload?.authority){
+  semantic=payload.authority.canonicalProjectSha256===canonicalHash(payload.project)
+   ?{status:'SEMANTICS_UNPROVEN',errors:['projection_lacks_replay_and_source_evidence']}
+   :{status:'SEMANTICS_CONFLICT',errors:['stale_authority_binding']};
+ }
+ }
+ const exact=await sha256(bytes);el.textContent=`BYTES_VERIFIED · ${semantic.status} · ${type}${revision===null?'':' · revision '+revision} · SHA-256 ${exact}`+(semantic.errors?.length?' · '+semantic.errors.join(', '):'');el.className='status-line '+(semantic.status==='SEMANTICS_VALID'?'ok':'error');
+ }catch(e){el.textContent='VERIFICATION FAILED · '+e.message;el.className='status-line error'}finally{$('verifyFile').value=''}}
+// Restore is committed only after the candidate can be rendered. Any error
+// before persistent autosave restores the previous live state and view.
+function commitRestoredProject(restored,bundledTemplates,successText,resolutionReason=null){
+ const previous={state,templates,selectedId,selectedResourceId,expanded,replayRevision,replayView,lastPlanningSnapshot,jsonInput:$('jsonInput').value};
+ try{
+  // Browser-local templates are separate from the project snapshot. A matching
+  // ID with different content is a conflict, not permission to drop the import.
+  if(bundledTemplates?.length){
+   const existingById=new Map();
+   for(const t of templates){
+    if(existingById.has(t.id)&&!deepEqual(existingById.get(t.id),t))throw Error('Ambiguous browser-local template ID: '+t.id);
+    existingById.set(t.id,t);
+   }
+   for(const t of bundledTemplates){
+    const existing=existingById.get(t.id);
+    if(existing&&!deepEqual(existing,t))throw Error('Template ID conflicts with browser-local template; restore aborted: '+t.id);
+   }
+  }
+  state=restored;
+  initPlanning();replayRevision=null;replayView=null;
+  if(resolutionReason!==null)recordPlanning('authority_resolution','Accepted canonical project definition from '+restored.authority.source,{actor:'human',reason:resolutionReason,outcome:'accepted'});
+  selectedId=state.nodes[0]?.id||null;
+  selectedResourceId=state.resources[0]?.id||null;
+  expanded=new Set(state.nodes.filter(n=>n.kind==='folder').map(n=>n.id));
+  $('jsonInput').value=state.raw;
+  if(bundledTemplates?.length){
+   const updated=clone(templates),known=new Set(updated.map(t=>t.id));
+   for(const t of bundledTemplates)if(!known.has(t.id)){updated.push(t);known.add(t.id)}
+   templates=updated;
+  }
+  renderAll(); // Every rendering operation must succeed before the project is persisted.
+  const persisted=writeState();
+  const templatePersisted=bundledTemplates?.length?saveTemplates():true;
+  if(templateStoreConflict){
+   status('PARTIAL_RESTORE · TEMPLATE_SOURCE_CONFLICT · '+(persisted?'PROJECT_AUTOSAVED':'PROJECT_AUTOSAVE_UNAVAILABLE')+' · Template sources diverged during restore. Backup and restore are blocked until reconciliation.','error');
+  }else if(!templatePersisted){
+   status('PARTIAL_RESTORE · TEMPLATE_PERSISTENCE_FAILED · '+(persisted?'PROJECT_AUTOSAVED':'PROJECT_AUTOSAVE_UNAVAILABLE')+' · Templates are session-only; export a Full Project ZIP before reload.','error');
+  }else if(!persisted){
+   status('Restored session-only · PROJECT_AUTOSAVE_UNAVAILABLE · Export a Full Project ZIP before reload.','error');
+  }else{
+   status(successText+(Object.keys(templateQuarantine).length?' · LEGACY_TEMPLATE_EVIDENCE_PRESERVED':'') ,'ok');
+  }
+ }catch(e){
+  state=previous.state;templates=previous.templates;selectedId=previous.selectedId;
+  selectedResourceId=previous.selectedResourceId;expanded=previous.expanded;
+  replayRevision=previous.replayRevision;replayView=previous.replayView;
+  lastPlanningSnapshot=previous.lastPlanningSnapshot;$('jsonInput').value=previous.jsonInput;
+  try{renderAll()}catch(_){/* Original state is preserved even if display recovery fails. */}
+  throw e;
+ }
+}
+async function restoreFile(file){
+ if(!file||!requireTemplateSourcesReady()||!checkDiscard())return;
+ try{const bytes=new Uint8Array(await file.arrayBuffer());if(bytes.length>15_000_000)throw Error('Project restore maximum is 15 MB.');let data,bundledTemplates=[],bundle=null;
+  if(file.name.toLowerCase().endsWith('.zip')){bundle=extractStoredZip(bytes);await verifyBundle(bundle);data=bundle.state;bundledTemplates=validatedTemplates(bundle.templates);}
+  else{const parsed=JSON.parse(new TextDecoder().decode(bytes));if(parsed?.export?.kind==='tree_full'&&(!parsed.export.sha256?.value||await sha256(jsonBytes(parsed.data))!==parsed.export.sha256.value))throw Error('tree_full payload SHA-256 mismatch');data=parsed.format===PROJECT_FORMAT?parsed:recoverFullJson(parsed,bytes,file.name)}
+  // Verify the original archive bytes BEFORE any normalization. Standalone
+  // restores follow the same canonical saved-state admission contract.
+  if(bundle){const semantic=validateBundleSemantics(bundle);const nonAuthority=semantic.errors.filter(e=>!e.startsWith('authority:'));if(nonAuthority.length)throw Error('Inconsistent ZIP projections or source: '+nonAuthority.join(', '));}
+  assertCanonicalSavedState(data);
+  const restored=normalizeImportedState(clone(data));const legacy=inspectAuthority(restored);let imported=null;try{imported=metaFromJson(JSON.parse(restored.raw).project)}catch(e){}
+  if((imported&&fullProjectDiff(imported,restored.project).length)||!['VALID','VALID_LEGACY'].includes(legacy.status)){
+   if(!imported)throw Error('Cannot resolve original scaffold project identity; restore aborted.');showAuthorityDialog({kind:'restore',imported,current:clone(restored.project),conflicts:fullProjectDiff(imported,restored.project),restored,bundledTemplates});return;
+  }
+  commitRestoredProject(restored,bundledTemplates,`Restored ${restored.project.name||'project'} from ${file.name}. SEMANTICS_VALID.`);
+ }catch(e){status(`Restore failed: ${e.message}`,'error')}
+}
+
+function downloadLedger(){if(!needProject())return;doExportLedger()}
+async function doExportLedger(){
+ if(busy||!requireTemplateSourcesReady())return;
+ try{flushPendingRevision();assertSemanticAuthority(state)}catch(e){status('Ledger export BLOCKED · '+e.message,'error');return}
+ busy=true;
+ const originState=state;
+ try{
+  const version=nextVersion(),timestamp=now(),keywords=metaKeywords(),projectName=originState.project.name;
+  const payload={projectId:originState.projectId,projectName,version,timestamp,keywords,ledger:clone(originState.ledger)};
+  const bytes=jsonBytes(payload),originFingerprint=JSON.stringify(originState),templateFingerprint=JSON.stringify(templates);
+  const sha=await sha256(bytes),filename=`${slug(projectName)}_${version}_export_ledger.json`;
+  if(!requireTemplateSourcesReady()||state!==originState||JSON.stringify(originState)!==originFingerprint||JSON.stringify(templates)!==templateFingerprint)
+   throw Error('Project or templates changed during ledger export; download blocked.');
+  download(bytes,filename,'application/json');
+  advanceVersion();originState.ledger.push({id:id(),version,kind:'export_ledger',filename,timestamp,sha256:sha,payloadSha256:null,bytes:bytes.length,keywords});
+  audit('export',`Exported export_ledger as ${version}`,{sha256:sha});writeState();renderLedger();updateRelease();status(`Exported ${filename} · SHA-256 ${sha}`,'ok');
+ }catch(e){status(`Ledger export failed: ${e.message}`,'error')}finally{busy=false}
+}
+async function copyText(text){try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(text);else{const temp=document.createElement('textarea');temp.value=text;temp.style.position='fixed';temp.style.left='-9999px';document.body.appendChild(temp);temp.select();if(!document.execCommand('copy'))throw Error('Copy unavailable');temp.remove()}toast('Copied to clipboard')}catch(e){toast('Clipboard unavailable. Select text in the box and copy manually.')}}
+function readStorage(){
+ try{
+  const p=localStorage.getItem(STORAGE_KEY);
+  if(p){const obj=normalizeImportedState(JSON.parse(p));state=obj;initPlanning();const initialAuthority=inspectAuthority(obj);if(initialAuthority.status==='CONFLICT')status('AUTOSAVE IDENTITY CONFLICT · Export blocked until explicit restore reconciliation.','error');selectedId=obj.nodes[0]?.id||null;selectedResourceId=obj.resources[0]?.id||null;expanded=new Set(obj.nodes.filter(n=>n.kind==='folder').map(n=>n.id));$('jsonInput').value=obj.raw}
+  if(!state.planning)initPlanning(true);
+ }catch(e){status('Could not read project autosave. Import a Full project ZIP to recover.','error');state=freshState()}
+ // Template corruption must not interrupt document initialization or prevent
+ // attachment of the Restore handler. Original local bytes remain untouched.
+ readBrowserTemplates();
+ if(templateLoadWarning)status(templateLoadWarning,'error');
+}
+
+// Local scratchpad + typed resource registry (descriptive; never execute/fetch paths).
+function validateScratchpad(s){
+ const body=typeof s==='string'?s:typeof s?.body==='string'?s.body:'';
+ if(body.length>500000)throw Error('Scratchpad exceeds 500,000 characters.');
+ return {body,updatedAt:typeof s?.updatedAt==='string'?s.updatedAt:null};
+}
+function splitTags(text){return [...new Set(String(text||'').split(/[,;\n]/).map(t=>t.trim().toLowerCase()).filter(t=>t.length>0&&t.length<=90))].slice(0,50)}
+function validateResources(resources){
+ if(resources===undefined||resources===null)return [];
+ if(!Array.isArray(resources)||resources.length>2500)throw Error('Invalid or oversized resource registry.');
+ const seen=new Set();
+ return resources.map(r=>{
+  if(!r||typeof r.id!=='string'||!r.id||seen.has(r.id))throw Error('Invalid or duplicate resource ID.');
+  seen.add(r.id);
+  const kind=RESOURCE_KINDS.includes(r.kind)?r.kind:'other';
+  const language=LANGUAGES.includes(r.language)?r.language:'unknown';
+  const type=RESOURCE_TYPES.includes(r.type)?r.type:'other';
+  const use=RESOURCE_USES.includes(r.use)?r.use:'unknown';
+  const scope=RESOURCE_SCOPES.includes(r.scope)?r.scope:'unknown';
+  const priority=Number(r.priority);
+  if(!Number.isInteger(priority)||priority<1||priority>10)throw Error('Resource priority must be 1–10.');
+  for(const field of ['name','value','notes','customLanguage'])if(typeof r[field]!=='string'||r[field].length>10000)throw Error('Invalid resource '+field);
+  return {id:r.id,name:r.name.slice(0,200),kind,value:r.value.slice(0,2000),notes:r.notes.slice(0,10000),language,customLanguage:r.customLanguage.slice(0,120),agentReview:language==='not_listed',archived:Boolean(r.archived),type,use,scope,priority,tags:Array.isArray(r.tags)?splitTags(r.tags.join(',')):[],autoKeywords:Array.isArray(r.autoKeywords)?r.autoKeywords.filter(x=>x&&keywordFields.includes(x.field)&&typeof x.term==='string').slice(0,50).map(x=>({field:x.field,term:x.term.slice(0,90)})):[],createdAt:typeof r.createdAt==='string'?r.createdAt:now(),updatedAt:typeof r.updatedAt==='string'?r.updatedAt:now()};
+ });
+}
+function newResource(){return {id:id(),kind:'local_tool',name:'New resource',value:'',notes:'',language:'unknown',customLanguage:'',agentReview:false,archived:false,type:'developer_tools',use:'unknown',scope:'full_app',priority:1,tags:[],autoKeywords:[],createdAt:now(),updatedAt:now()}}
+function resourceById(rid){return state.resources.find(r=>r.id===rid)||null}
+function renderScratchpad(){const el=$('scratchpad');if(document.activeElement!==el)el.value=state.scratchpad.body;refreshScratchCount()}
+function refreshScratchCount(){const p=state.scratchpad;$('scratchCount').textContent=`${p.body.length.toLocaleString()} characters · ${p.updatedAt?'Edited '+p.updatedAt:'No edits yet'}`}
+function renderResourceList(){
+ const box=$('resourceList'),q=resourceFilter.trim().toLowerCase();
+ const list=state.resources.filter(r=>{
+  if(resourceKindFilter&&r.kind!==resourceKindFilter)return false;
+  const text=[r.name,r.kind,r.value,r.notes,r.language,r.customLanguage,r.type,r.use,r.scope,...r.tags,...r.autoKeywords.map(x=>`${x.field} ${x.term}`)].join(' ').toLowerCase();
+  return !q||text.includes(q);
+ });
+ $('resourceSummary').textContent=`${list.length} shown · ${state.resources.length} saved · ${state.resources.filter(r=>r.agentReview&&!r.archived).length} agent flags · ${state.resources.filter(r=>r.archived).length} archived`;
+ box.innerHTML=list.length?list.map(r=>`<button class="resource-item ${r.id===selectedResourceId?'active':''} ${r.archived?'archived':''}" data-action="select-resource" data-id="${h(r.id)}" aria-pressed="${r.id===selectedResourceId}"><strong>${h(r.name||'(untitled)')}</strong><small>${h(r.kind.replace(/_/g,' '))} · Priority ${r.priority} / 10</small>${r.value?`<small>${h(r.value)}</small>`:''}<span class="resource-tags">${r.archived?'<span class="mini-badge excluded">ARCHIVED</span>':''}${r.agentReview?'<span class="mini-badge core">⚑ Agent review</span>':''}${r.tags.slice(0,3).map(t=>`<span class="mini-badge">${h(t)}</span>`).join('')}${r.autoKeywords.length?`<span class="mini-badge">${r.autoKeywords.length} auto matches</span>`:''}</span></button>`).join(''):'<div class="empty">No matching references. Add one or clear filters.</div>';
+}
+function selectOptions(names,chosen){return names.map(x=>`<option value="${h(x)}" ${x===chosen?'selected':''}>${h(x.replaceAll('_',' '))}</option>`).join('')}
+function renderResourceEditor(){
+ const r=resourceById(selectedResourceId),el=$('resourceEditor');
+ if(!r){el.innerHTML='<div class="empty">Add or select a reference to edit its classification, priority and keywords.</div>';return}
+ el.innerHTML=`<div class="card-head"><h3>Reference details</h3><div class="inline-actions"><button class="tiny" data-action="duplicate-resource">Clone</button><button class="tiny danger" data-action="archive-resource">${r.archived?'Restore':'Archive'}</button></div></div>
+ <div class="resource-fields">
+  <div class="field span2"><label for="res-name">Display name</label><input id="res-name" data-resource-field="name" maxlength="200" value="${h(r.name)}" placeholder="e.g., local Go compiler"></div>
+  <div class="field"><label for="res-kind">Saved reference category</label><select id="res-kind" data-resource-field="kind">${selectOptions(RESOURCE_KINDS,r.kind)}</select></div>
+  <div class="field"><label for="res-lang">Code language</label><select id="res-lang" data-resource-field="language">${selectOptions(LANGUAGES,r.language)}</select></div>
+  <div class="field span2 ${r.language==='not_listed'?'':'hidden'}" id="customLanguageRow"><label for="res-custom-lang">Not-listed language — agent review required</label><input id="res-custom-lang" data-resource-field="customLanguage" maxlength="120" value="${h(r.customLanguage)}" placeholder="Name the language, or leave blank for the agent to determine"><p class="review-flag" style="margin:5px 0 0">⚑ Agent flag: language requires verification</p></div>
+  <div class="field span2"><label for="res-value">Local path / tool command / GitHub or master URL</label><input id="res-value" data-resource-field="value" maxlength="2000" value="${h(r.value)}" placeholder="~/repos/tool · /usr/bin/go · https://github.com/..."></div>
+  <div class="field"><label for="res-type">Type</label><select id="res-type" data-resource-field="type">${selectOptions(RESOURCE_TYPES,r.type)}</select></div>
+  <div class="field"><label for="res-use">Use</label><select id="res-use" data-resource-field="use">${selectOptions(RESOURCE_USES,r.use)}</select></div>
+  <div class="field"><label for="res-scope">Scope</label><select id="res-scope" data-resource-field="scope">${selectOptions(RESOURCE_SCOPES,r.scope)}</select></div>
+  <div class="field"><label>Priority: 1 = local/flexible · 10 = hard stop</label><div class="priority-line"><input aria-label="Resource priority" type="range" min="1" max="10" step="1" value="${r.priority}" id="res-priority" data-resource-field="priority"><output id="priorityValue">${r.priority}</output></div></div>
+  <div class="field span2"><label for="res-tags">Keywords (comma or semicolon separated)</label><input id="res-tags" data-resource-field="tags" maxlength="3000" value="${h(r.tags.join(', '))}" placeholder="linux, local-first, svg, cli"></div>
+  <div class="field span2"><label>Predetermined system keywords · click to tag</label><div class="resource-chip-tray">${PRESET_TAGS.map(tag=>`<button class="tiny" data-action="tag-resource" data-tag="${h(tag)}" title="Add keyword ${h(tag)}">＋ ${h(tag)}</button>`).join('')}</div></div>
+  <div class="field span2"><label for="res-notes">Purpose / tools / docs / restrictions</label><textarea id="res-notes" data-resource-field="notes" maxlength="10000" placeholder="Why this tool matters; reference links; dependencies; compatibility; constraints…">${h(r.notes)}</textarea></div>
+  <div class="field span2"><label>Automatic project keyword matches (separate from manual tags)</label><div class="resource-tags">${r.autoKeywords.length?r.autoKeywords.map(x=>`<span class="mini-badge">${h(x.field)}: ${h(x.term)}</span>`).join(''):'<span class="micro">None. Use Auto-tag above to match five project fields.</span>'}</div></div>
+ </div><p class="micro">Stable resource ID ${h(r.id)} · ${r.updatedAt?'Updated '+h(r.updatedAt):'New'}</p>`;
+}
+function addResource(){if(!requireLive())return;if(state.resources.length>=2500){toast('Resource limit reached (2,500).');return}const r=newResource();state.resources.push(r);selectedResourceId=r.id;audit('resource_add','Added reference '+r.name,{resourceId:r.id});renderResourceList();renderResourceEditor();$('res-name')?.focus()}
+function classifyReference(value){const val=value.trim();if(/^https?:\/\/github\.com\//i.test(val)){try{const parts=new URL(val).pathname.split('/').filter(Boolean);return parts.length<=1?'github_account':'github_repo'}catch(e){return 'url'}}if(/^https?:\/\//i.test(val))return 'url';if(/^(?:~\/|\/|\.{1,2}\/|[A-Za-z]:[\\/])/.test(val))return 'local_path';return 'local_tool'}
+function bulkAddResources(){if(!requireLive())return;
+ const field=$('bulkReferences'),lines=field.value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+ if(!lines.length){toast('Paste a URL or path list first.');return}
+ if(lines.length>2500){toast('Maximum 2,500 lines per import.');return}
+ const already=new Set(state.resources.map(r=>r.value.trim().toLowerCase()).filter(Boolean));let added=0,skipped=0;
+ for(const line of lines){if(state.resources.length>=2500){skipped++;continue}const ix=line.indexOf(' | ');let value=ix>=0?line.slice(ix+3).trim():line,label=ix>=0?line.slice(0,ix).trim():'';if(!value||value.length>2000||already.has(value.toLowerCase())){skipped++;continue}if(!label){if(/^https?:\/\//i.test(value)){try{label=new URL(value).hostname+new URL(value).pathname}catch(e){label=value}}else label=value.split(/[\/]/).filter(Boolean).slice(-1)[0]||value}const r=newResource();r.name=label.slice(0,200);r.value=value;r.kind=classifyReference(value);r.type=r.kind.startsWith('github')?'documentation':r.kind==='url'?'documentation':'developer_tools';r.scope=r.kind==='github_repo'?'source_repo':'unknown';state.resources.push(r);already.add(value.toLowerCase());selectedResourceId=r.id;added++}
+ if(added){audit('resource_bulk_add',`Bulk added ${added} references; skipped ${skipped}`);renderResourceList();renderResourceEditor();field.value=''}toast(`Added ${added} references · skipped ${skipped} duplicates/invalid lines`)
+}
+function duplicateResource(){if(!requireLive())return;const r=resourceById(selectedResourceId);if(!r)return;if(state.resources.length>=2500){toast('Resource limit reached.');return}const copy=clone(r);copy.id=id();copy.name=r.name+' copy';copy.createdAt=now();copy.updatedAt=now();state.resources.push(copy);selectedResourceId=copy.id;audit('resource_clone','Cloned reference '+r.name,{resourceId:copy.id});renderResourceList();renderResourceEditor()}
+function archiveResource(){if(!requireLive())return;const r=resourceById(selectedResourceId);if(!r)return;r.archived=!r.archived;r.updatedAt=now();audit('resource_archive',`${r.archived?'Archived':'Restored'} reference ${r.name}`,{resourceId:r.id});renderResourceList();renderResourceEditor()}
+function addResourceTag(tag){if(!requireLive())return;const r=resourceById(selectedResourceId);if(!r)return;const clean=splitTags(tag);if(!clean.length)return;r.tags=[...new Set([...r.tags,...clean])].slice(0,50);r.updatedAt=now();audit('resource_tag',`Tagged ${r.name}: ${clean.join(', ')}`,{resourceId:r.id});renderResourceList();renderResourceEditor()}
+function keywordMatches(text,term){const norm=s=>String(s||'').toLowerCase().replace(/[_-]/g,' ').replace(/\s+/g,' ').trim();const n=norm(text),t=norm(term);if(t.length<2)return false;const e=t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');return new RegExp(`(^|[^a-z0-9])${e}(?=$|[^a-z0-9])`,'i').test(n)}
+function projectKeywordPhrases(){const results=[];for(const field of keywordFields){const value=keywordArray(state.project.keywords[field]);for(const term of value){if(term.length>=2&&term.length<=90)results.push({field,term})}}return results}
+function matchResources(){if(!requireLive())return;const phrases=projectKeywordPhrases();if(!phrases.length){toast('Enter keyword phrases in the five Project brief fields first.');return}let matched=0,changed=0;for(const r of state.resources){if(r.archived)continue;const text=[r.name,r.value,r.notes,r.kind.replaceAll('_',' '),r.type.replaceAll('_',' '),r.language,r.customLanguage,r.use,r.scope.replaceAll('_',' '),...r.tags].join(' | ');const next=phrases.filter(x=>keywordMatches(text,x.term));matched+=next.length;if(JSON.stringify(next)!==JSON.stringify(r.autoKeywords)){changed++;r.autoKeywords=next;r.updatedAt=now()}}audit('resource_automatch',`Matched ${matched} keyword links across ${state.resources.length} resources`,{changedRecords:changed});renderResourceList();renderResourceEditor();toast(`${matched} keyword matches · ${changed} resources updated`)}
+function clearResourceMatches(){if(!requireLive())return;let changed=0;for(const r of state.resources)if(r.autoKeywords.length){r.autoKeywords=[];r.updatedAt=now();changed++}if(changed){audit('resource_automatch_clear',`Cleared automatic matches on ${changed} references`);renderResourceList();renderResourceEditor()}toast('Automatic matches cleared; manual tags preserved')}
+function clearScratch(){if(!requireLive())return;if(!state.scratchpad.body)return;if(!confirm('Clear the local project scratchpad? An audit event will retain its previous text until the audit history is pruned.'))return;const prev=state.scratchpad.body;state.scratchpad={body:'',updatedAt:now()};audit('scratchpad_clear',`Cleared scratchpad (${prev.length} characters)`,{priorBody:prev});renderScratchpad();toast('Scratchpad cleared')}
+
+function handleClick(ev){const btn=ev.target.closest('[data-action],[data-export]');if(!btn)return;const allowedDuringReplay=new Set(['select','expand','replay-select','return-live','copy-sha']);if(replayRevision!==null&&!allowedDuringReplay.has(btn.dataset.action||'')){toast('Replay is read-only. Return to live to edit or export.');return}const exp=btn.dataset.export;if(exp){doExport(exp);return}const act=btn.dataset.action;switch(act){case 'copy-prompt':copyText($('agentPrompt').value);break;case 'refresh-prompt':$('agentPrompt').value=createPrompt();toast('Agent request refreshed');break;case 'copy-example':copyText(JSON.stringify(demo,null,2));break;case 'load-example':$('jsonInput').value=JSON.stringify(demo,null,2);status('Demo loaded. Click Generate / replace tree to open the explorer.');break;case 'open-scaffold':$('scaffoldFile').click();break;case 'generate':generate();break;case 'restore':$('restoreFile').click();break;case 'add-file':addNode('file');break;case 'add-folder':addNode('folder');break;case 'rename-node':renameNode();break;case 'move-node':moveNode();break;case 'record-decision':recordDecision();break;case 'replay-select':setReplay(btn.dataset.revision);break;case 'return-live':replayLive();break;case 'toggle-hidden':toggleHidden();break;case 'toggle-excluded':toggleExcluded();break;case 'add-note':addNote();break;case 'archive-note':archiveNote(btn.dataset.noteId);break;case 'expand':{const nid=btn.dataset.id;if(expanded.has(nid))expanded.delete(nid);else expanded.add(nid);renderTree();break}case 'select':selectedId=btn.dataset.id;renderTree();renderInspector();break;case 'export-template-recovery':exportTemplateRecoveryEvidence();break;case 'resolve-template-stores':resolveTemplateStores(btn.dataset.choice);break;case 'save-template':saveTemplate();break;case 'create-from-template':createFromTemplate();break;case 'delete-template':deleteTemplate();break;case 'official-phase':promoteOfficial();break;case 'download-ledger':downloadLedger();break;case 'verify-export':$('verifyFile').click();break;case 'copy-scratchpad':copyText(state.scratchpad.body);break;case 'clear-scratchpad':clearScratch();break;case 'add-resource':addResource();break;case 'bulk-add-resources':bulkAddResources();break;case 'select-resource':selectedResourceId=btn.dataset.id;renderResourceList();renderResourceEditor();break;case 'duplicate-resource':duplicateResource();break;case 'archive-resource':archiveResource();break;case 'tag-resource':addResourceTag(btn.dataset.tag);break;case 'match-resources':matchResources();break;case 'clear-resource-matches':clearResourceMatches();break;case 'copy-sha':{const displayed=btn.dataset.sha;if(displayed)copyText(displayed);break}}}
+function uniqueNoteById(noteId){
+ const matches=state.notes.filter(n=>n.id===noteId);
+ if(matches.length!==1){status('Ambiguous or missing note identity; editing blocked. Restore a validated archive.','error');return null}
+ return matches[0];
+}
+function handleInput(ev){const e=ev.target;if(e.dataset.project){if(!requireLive())return;state.project[e.dataset.project]=e.value;markHumanProjectEdit();recordPlanning('project_metadata_edit','Human updated project brief',{actor:'human',reason:state.authority?.reason||'Human edited the Project Brief in the local UI.'});scheduleSave();if(e.dataset.project==='name')$('projectBadge').textContent=e.value||'Untitled';refreshPrompt();return}if(e.dataset.keyword){if(!requireLive())return;state.project.keywords[e.dataset.keyword]=keywordArray(e.value);markHumanProjectEdit();recordPlanning('project_metadata_edit','Human updated project keywords',{actor:'human',reason:state.authority?.reason||'Human edited the Project Brief in the local UI.'});scheduleSave();refreshPrompt();return}if(e.id==='treeSearch'){filter=e.value.trim();renderTree();return}
+ if(e.id==='scratchpad'){if(!requireLive())return;state.scratchpad.body=e.value;state.scratchpad.updatedAt=now();scheduleSave();refreshScratchCount();return}
+ if(e.id==='resourceSearch'){resourceFilter=e.value.trim();renderResourceList();return}
+ if(e.dataset.resourceField){if(!requireLive())return;const r=resourceById(selectedResourceId);if(r){const field=e.dataset.resourceField;if(field==='tags')r.tags=splitTags(e.value);else if(field==='priority'){r.priority=Math.max(1,Math.min(10,Number(e.value)||1));$('priorityValue').textContent=String(r.priority)}else if(['name','kind','value','notes','language','customLanguage','type','use','scope'].includes(field)){r[field]=e.value;if(field==='language')r.agentReview=e.value==='not_listed'}r.updatedAt=now();scheduleSave();renderResourceList()}return}
+ if(e.dataset.nodeField){if(!requireLive())return;const n=nodeById(selectedId);if(n){n[e.dataset.nodeField]=e.value;n.updatedAt=now();scheduleSave()}return}if(e.dataset.noteField){if(!requireLive())return;const note=uniqueNoteById(e.dataset.noteId);if(note){note[e.dataset.noteField]=e.value;note.updatedAt=now();scheduleSave()}}}
+function handleChange(ev){const e=ev.target;if(e.id==='replaySlider'){setReplay(e.value);return}if(e.id==='showHidden'){showHidden=e.checked;renderTree();return}if(e.id==='showExcluded'){showExcluded=e.checked;renderTree();return}if(e.id==='resourceKindFilter'){resourceKindFilter=e.value;renderResourceList();return}
+ if(e.dataset.resourceField){if(!requireLive())return;const r=resourceById(selectedResourceId);if(r){audit('resource_edit',`Edited ${e.dataset.resourceField} on ${r.name}`,{resourceId:r.id});if(e.dataset.resourceField==='language'){renderResourceEditor()}else if(e.dataset.resourceField==='tags'){renderResourceEditor()}renderResourceList()}return}
+ if(e.id==='scratchpad'){audit('scratchpad_edit',`Updated scratchpad (${state.scratchpad.body.length} chars)`);return}
+ if(e.id==='nodeCore'){if(!requireLive())return;const n=nodeById(selectedId);if(n&&n.kind==='file'){n.state.core=e.checked;n.updatedAt=now();audit('node_core',`${pathFor(n)} core → ${e.checked}`,{nodeId:n.id});renderTree();renderStats()}return}if(e.id==='verifyFile'){verifyExportFile(e.files[0]);return}if(e.id==='scaffoldFile'){const file=e.files[0];if(file){file.text().then(t=>{$('jsonInput').value=t;status(`Loaded ${file.name} into import box; click Generate to validate.`)}).catch(err=>status(err.message,'error'))}e.value='';return}if(e.id==='restoreFile'){restoreFile(e.files[0]);e.value='';return}if(e.dataset.noteField){if(!requireLive())return;const n=uniqueNoteById(e.dataset.noteId);if(n){audit('note_edit',`Updated ${e.dataset.noteField} on note ${n.name}`,{nodeId:n.nodeId,noteId:n.id});renderStats()}return}if(e.dataset.nodeField){if(!requireLive())return;const n=nodeById(selectedId);if(n){audit('node_description',`Updated purpose for ${pathFor(n)}`,{nodeId:n.id});renderTree()}return}if(e.dataset.project||e.dataset.keyword){audit('project_metadata',`Updated ${e.dataset.project||e.dataset.keyword}`);return}}
+function init(){readStorage();renderAll();$('authorityAccept').addEventListener('click',acceptAuthorityDialog);$('authorityCancel').addEventListener('click',()=>{closeAuthorityDialog();status('Cancelled: no project identity changed.','error')});document.addEventListener('click',handleClick);document.addEventListener('input',handleInput);document.addEventListener('change',handleChange);window.addEventListener('beforeunload',()=>{if(saveTimer)writeState()});}
+init();
+})();
+</script>
+</body>
+</html>
