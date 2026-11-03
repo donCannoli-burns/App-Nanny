@@ -1,0 +1,50 @@
+name: Repair 023 file-picker UTF-8 admission
+
+on:
+  push:
+    branches:
+      - repair/023-file-picker-utf8-admission
+  pull_request:
+    branches:
+      - repair/022-scaffold-strict-admission
+
+permissions:
+  contents: read
+
+jobs:
+  utf8-admission:
+    name: Reject invalid UTF-8 before scaffold text is admitted
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Chromium and Playwright
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.57.0
+          python -m playwright install --with-deps chromium
+      - name: Verify Repair 023 inline JavaScript syntax and source SHA-256
+        run: |
+          echo 'f4bde89f4efd585fc406f020d659b2eda5990b41ed1e62e9837aa08f3ffd2b73  studio/context_tree_studio_authority_repaired_023.html' | sha256sum -c -
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('studio/context_tree_studio_authority_repaired_023.html').read_text(encoding='utf-8')
+          m=re.search(r'<script>(.*?)</script>',s,re.S)
+          assert m
+          Path('/tmp/app-nanny-023.js').write_text(m.group(1))
+          PY
+          node --check /tmp/app-nanny-023.js
+      - name: Repair 020 metadata suite (unchanged)
+        run: |
+          python tests/test_metadata_contract_020.py --html studio/context_tree_studio_authority_repaired_023.html --json /tmp/repair020-on023.json
+      - name: Repair 021 duplicate-key suite (unchanged)
+        run: |
+          python tests/test_duplicate_json_021.py --html studio/context_tree_studio_authority_repaired_023.html --results /tmp/repair021-on023.json
+      - name: Repair 022 scaffold suite (unchanged)
+        run: |
+          python tests/test_scaffold_admission_022.py --html studio/context_tree_studio_authority_repaired_023.html --results /tmp/repair022-on023.json
+      - name: Repair 023 exact-upload-byte UTF-8 suite
+        run: |
+          python tests/test_file_picker_utf8_023.py --results /tmp/repair023.json
