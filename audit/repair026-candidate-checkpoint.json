@@ -1,0 +1,33 @@
+{
+  "schema": "app-nanny/repair026-local-checkpoint/v1",
+  "finding": "R025-I01",
+  "branch": "repair/026-authority-modal-isolation",
+  "base_commit": "ad5800171cdff62a4435a239d9b0918b5a15a9af",
+  "source_path": "studio/context_tree_studio_authority_repaired_026.html",
+  "source_sha256": "0f3b37f2c0f8f1ec5d2046a5ee11fa73323b715161b6f065751363f9382f6a98",
+  "source_git_blob_sha1": "a0207720d217c2cb46527cce6437cb7ae2229146",
+  "source_size_bytes": 177136,
+  "test_path": "tests/test_authority_modal_isolation_026.py",
+  "test_sha256": "1ac432050d7aaafa2a6278db89794c760ea169b768db791c2bd225ea47d82097",
+  "test_git_blob_sha1": "d6a6f6abf01fd78036d81dc1acb348a4aad18a3b",
+  "exact_parent_negative_reproduction": "keyboard Shift+Tab 49 reaches background JSON editor, permits editor B while accepted project A",
+  "additional_parent_negative_reproduction": "reentrant Generate reachable by keyboard and resets authority reason",
+  "local_browser_result": "10/10 PASS",
+  "local_page_javascript_errors": 0,
+  "historical_regression_ci": "PENDING",
+  "independent_reaudit": "REQUIRED",
+  "phase1_authorized": false,
+  "go_lifecycle_started": false,
+  "ci_gate": "LOCAL_CANDIDATE_PASS__CI_AND_INDEPENDENT_REAUDIT_REQUIRED__PHASE1_BLOCKED",
+  "known_open_findings": [
+    "R020-I02 advisory/extension metadata policy"
+  ],
+  "unverified_gates": [
+    "native file:// storage",
+    "crash durability",
+    "authenticated actor identity",
+    "legacy-data migration",
+    "external specialist approval"
+  ],
+  "parents_and_main_unchanged": true
+}
