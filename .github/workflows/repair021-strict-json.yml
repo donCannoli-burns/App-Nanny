@@ -1,0 +1,44 @@
+name: Repair 021 strict JSON admission
+
+on:
+  push:
+    branches:
+      - repair/021-strict-json-admission
+  pull_request:
+    branches:
+      - repair/020-metadata-contract
+
+permissions:
+  contents: read
+
+jobs:
+  strict-json:
+    name: Reject duplicate keys in raw JSON bytes
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser dependencies
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.57.0
+          python -m playwright install --with-deps chromium
+      - name: Syntax-check candidate inline JavaScript
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          path=Path('studio/context_tree_studio_authority_repaired_021.html')
+          source=path.read_text(encoding='utf-8')
+          match=re.search(r'<script>(.*?)</script>',source,re.S)
+          assert match, 'Studio inline JS not found'
+          Path('/tmp/studio021.js').write_text(match.group(1))
+          PY
+          node --check /tmp/studio021.js
+      - name: Repair 020 unchanged metadata regression suite against Repair 021
+        run: |
+          python tests/test_metadata_contract_020.py --html studio/context_tree_studio_authority_repaired_021.html --json /tmp/repair020-on021.json
+      - name: Repair 021 raw JSON admission and standalone export suite
+        run: |
+          python tests/test_duplicate_json_021.py --results /tmp/repair021.json
