@@ -1,0 +1,46 @@
+name: Repair 022 scaffold strict JSON admission
+
+on:
+  push:
+    branches:
+      - repair/022-scaffold-strict-admission
+  pull_request:
+    branches:
+      - repair/021-strict-json-admission
+
+permissions:
+  contents: read
+
+jobs:
+  scaffold-admission:
+    name: Reject ambiguous editable scaffold JSON
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser dependencies
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.57.0
+          python -m playwright install --with-deps chromium
+      - name: Syntax check Repair 022 inline JavaScript
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          html=Path('studio/context_tree_studio_authority_repaired_022.html').read_text(encoding='utf-8')
+          match=re.search(r'<script>(.*?)</script>',html,re.S)
+          assert match, 'Studio inline JavaScript missing'
+          Path('/tmp/studio022.js').write_text(match.group(1))
+          PY
+          node --check /tmp/studio022.js
+      - name: Repair 020 historical metadata contract regression
+        run: |
+          python tests/test_metadata_contract_020.py --html studio/context_tree_studio_authority_repaired_022.html --json /tmp/repair020-on022.json
+      - name: Repair 021 strict ZIP and standalone JSON admission regression
+        run: |
+          python tests/test_duplicate_json_021.py --html studio/context_tree_studio_authority_repaired_022.html --results /tmp/repair021-on022.json
+      - name: Repair 022 editable scaffold admission regression
+        run: |
+          python tests/test_scaffold_admission_022.py --results /tmp/repair022.json
