@@ -1,0 +1,48 @@
+name: Repair 024 file-picker read freshness
+
+on:
+  push:
+    branches:
+      - repair/024-file-picker-read-freshness
+  pull_request:
+    branches:
+      - repair/023-file-picker-utf8-admission
+
+permissions:
+  contents: read
+
+jobs:
+  file-picker-freshness:
+    name: Reject stale file completion after newer input
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser dependencies
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.57.0
+          python -m playwright install --with-deps chromium
+      - name: Validate exact HTML checksum and JavaScript syntax
+        run: |
+          echo '6b07827b9806515a2704c65db2788c4339664c24be995b6bac019ccd6583d0c6  studio/context_tree_studio_authority_repaired_024.html' | sha256sum -c -
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          content=Path('studio/context_tree_studio_authority_repaired_024.html').read_text('utf-8')
+          script=re.search(r'<script>(.*?)</script>',content,re.S)
+          assert script,'Missing Studio inline script'
+          Path('/tmp/app-nanny-024.js').write_text(script.group(1))
+          PY
+          node --check /tmp/app-nanny-024.js
+      - name: Repair 020 metadata contract regressions
+        run: python tests/test_metadata_contract_020.py --html studio/context_tree_studio_authority_repaired_024.html --json /tmp/repair020-on024.json
+      - name: Repair 021 strict JSON admission regressions
+        run: python tests/test_duplicate_json_021.py --html studio/context_tree_studio_authority_repaired_024.html --results /tmp/repair021-on024.json
+      - name: Repair 022 scaffold admission regressions
+        run: python tests/test_scaffold_admission_022.py --html studio/context_tree_studio_authority_repaired_024.html --results /tmp/repair022-on024.json
+      - name: Repair 023 fatal UTF-8 admission regressions
+        run: python tests/test_file_picker_utf8_023.py --html studio/context_tree_studio_authority_repaired_024.html --results /tmp/repair023-on024.json
+      - name: Repair 024 deferred file-read race regressions
+        run: python tests/test_file_picker_freshness_024.py --results /tmp/repair024.json
