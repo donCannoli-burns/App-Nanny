@@ -1,0 +1,22 @@
+{
+  "format": "app-nanny/github-source-checkpoint/v1",
+  "project": "App-Nanny",
+  "component": "Context Tree Studio",
+  "artifact_stage": "pre-alpha-research",
+  "candidate": "Repair 019",
+  "source_path": "studio/context_tree_studio_authority_repaired_019.html",
+  "source_sha256": "8b41c0096ebbbc4f920b1f059ea908d9b0aded5d6c6f01cdedeec77e77c14674",
+  "source_git_blob_sha1": "0acfee15648aca17aa36e9466e59270a9fc19e4b",
+  "original_repair_zip_sha256": "e26b3d675fb075fe269814a7113c7f2b15407c7172aa8bc6c70c1b8e069a11a0",
+  "independent_evidence_zip_sha256": "5012e812135a9109e2a62ba80db228729f0b60801678f43c54439ae68be209b6",
+  "evidence_embedded_in_repo": false,
+  "independent_verdict": "CORE_INVARIANT_FAILURE",
+  "gate": "INDEPENDENT_REAUDIT_FAILED__PHASE1_BLOCKED",
+  "phase1_authorized": false,
+  "go_lifecycle": "NOT_STARTED",
+  "native_file_persistence": "NOT_VERIFIED",
+  "crash_durability": "NOT_VERIFIED",
+  "external_specialist_signoff": "NOT_OBTAINED",
+  "source_type": "HTML5/JavaScript (not Go)",
+  "note": "GitHub publication of research source is not independent audit clearance. This authored checkpoint is separate from the original audit machine return."
+}
