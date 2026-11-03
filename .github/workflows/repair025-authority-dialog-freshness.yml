@@ -1,0 +1,54 @@
+name: Repair 025 authority-dialog read freshness
+
+on:
+  push:
+    branches:
+      - repair/025-authority-dialog-read-freshness
+  pull_request:
+    branches:
+      - repair/024-file-picker-read-freshness
+
+permissions:
+  contents: read
+
+jobs:
+  authority-dialog-freshness:
+    name: Reject stale async reads across import decisions
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser dependencies
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.57.0
+          python -m playwright install --with-deps chromium
+      - name: Verify exact candidate and browser test bytes
+        run: |
+          echo 'dab25c2b1b7caa7a6c58f620c32da47194cbd25a162b902f7df5b76079401be2  studio/context_tree_studio_authority_repaired_025.html' | sha256sum -c -
+          echo '39901177ac6e2cb86191546a4ecfbcc2eb6ab7cfc7629f612bcb016b7a8a6d8e  tests/test_authority_dialog_read_freshness_025.py' | sha256sum -c -
+      - name: Syntax-check repaired inline JavaScript and test script
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          content=Path('studio/context_tree_studio_authority_repaired_025.html').read_text(encoding='utf-8')
+          m=re.search(r'<script>(.*?)</script>',content,re.S)
+          assert m,'Missing Studio script'
+          Path('/tmp/app-nanny-025.js').write_text(m.group(1))
+          PY
+          node --check /tmp/app-nanny-025.js
+          python -m py_compile tests/test_authority_dialog_read_freshness_025.py
+      - name: Repair 020 unchanged metadata suite
+        run: python tests/test_metadata_contract_020.py --html studio/context_tree_studio_authority_repaired_025.html --json /tmp/repair020-on025.json
+      - name: Repair 021 unchanged strict JSON suite
+        run: python tests/test_duplicate_json_021.py --html studio/context_tree_studio_authority_repaired_025.html --results /tmp/repair021-on025.json
+      - name: Repair 022 unchanged scaffold suite
+        run: python tests/test_scaffold_admission_022.py --html studio/context_tree_studio_authority_repaired_025.html --results /tmp/repair022-on025.json
+      - name: Repair 023 unchanged fatal UTF-8 suite
+        run: python tests/test_file_picker_utf8_023.py --html studio/context_tree_studio_authority_repaired_025.html --results /tmp/repair023-on025.json
+      - name: Repair 024 unchanged async selection/editor suite
+        run: python tests/test_file_picker_freshness_024.py --html studio/context_tree_studio_authority_repaired_025.html --results /tmp/repair024-on025.json
+      - name: Repair 025 authority-dialog interleaving tests
+        run: python tests/test_authority_dialog_read_freshness_025.py --results /tmp/repair025.json
