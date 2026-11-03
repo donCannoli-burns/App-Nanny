@@ -1,0 +1,31 @@
+{
+  "schema": "app-nanny/repair025-local-checkpoint/v1",
+  "finding": "R024-I01",
+  "branch": "repair/025-authority-dialog-read-freshness",
+  "base_commit": "750c9c050cc3a336ce53e0771241e7e8ac07cd00",
+  "source_path": "studio/context_tree_studio_authority_repaired_025.html",
+  "source_sha256": "dab25c2b1b7caa7a6c58f620c32da47194cbd25a162b902f7df5b76079401be2",
+  "source_git_blob_sha1": "619ebe21b2ef1b5a6fa7ef02a6f539e8da022675",
+  "source_size_bytes": 175722,
+  "test_path": "tests/test_authority_dialog_read_freshness_025.py",
+  "test_sha256": "39901177ac6e2cb86191546a4ecfbcc2eb6ab7cfc7629f612bcb016b7a8a6d8e",
+  "test_git_blob_sha1": "bbc03df984ed2640eff3dc24e027f205ccb24789",
+  "test_count": 13,
+  "local_browser_result": "NOT_RUN_FULL_APP_IN_LOCAL_BROWSER",
+  "github_ci": "PENDING",
+  "independent_reaudit": "REQUIRED",
+  "phase1_authorized": false,
+  "go_lifecycle_started": false,
+  "status": "IMPLEMENTED_CANDIDATE__CI_AND_INDEPENDENT_REAUDIT_REQUIRED__PHASE1_BLOCKED",
+  "open_findings": [
+    "R020-I02 advisory and extension metadata"
+  ],
+  "unverified_gates": [
+    "native file:// persistence",
+    "browser crash durability",
+    "authenticated historical actors",
+    "legacy migration",
+    "external specialist signoff"
+  ],
+  "no_parent_ref_mutation": true
+}
