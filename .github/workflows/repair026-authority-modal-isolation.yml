@@ -1,0 +1,54 @@
+name: Repair 026 authority modal isolation
+
+on:
+  push:
+    branches:
+      - repair/026-authority-modal-isolation
+  pull_request:
+    branches:
+      - repair/025-authority-dialog-read-freshness
+
+permissions:
+  contents: read
+
+jobs:
+  modal-isolation:
+    name: Keep authority dialog isolated from background input
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser and Playwright
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.57.0
+          python -m playwright install --with-deps chromium
+      - name: Exact SHA-256 admission and inline syntax
+        run: |
+          echo '0f3b37f2c0f8f1ec5d2046a5ee11fa73323b715161b6f065751363f9382f6a98  studio/context_tree_studio_authority_repaired_026.html' | sha256sum -c -
+          echo '1ac432050d7aaafa2a6278db89794c760ea169b768db791c2bd225ea47d82097  tests/test_authority_modal_isolation_026.py' | sha256sum -c -
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          html=Path('studio/context_tree_studio_authority_repaired_026.html').read_text('utf-8')
+          script=re.search(r'<script>(.*?)</script>',html,re.S)
+          assert script
+          Path('/tmp/app-nanny-026.js').write_text(script.group(1))
+          PY
+          node --check /tmp/app-nanny-026.js
+          python -m py_compile tests/test_authority_modal_isolation_026.py
+      - name: Repair 020 metadata suite
+        run: python tests/test_metadata_contract_020.py --html studio/context_tree_studio_authority_repaired_026.html --json /tmp/repair020-on026.json
+      - name: Repair 021 strict JSON suite
+        run: python tests/test_duplicate_json_021.py --html studio/context_tree_studio_authority_repaired_026.html --results /tmp/repair021-on026.json
+      - name: Repair 022 scaffold suite
+        run: python tests/test_scaffold_admission_022.py --html studio/context_tree_studio_authority_repaired_026.html --results /tmp/repair022-on026.json
+      - name: Repair 023 fatal UTF-8 suite
+        run: python tests/test_file_picker_utf8_023.py --html studio/context_tree_studio_authority_repaired_026.html --results /tmp/repair023-on026.json
+      - name: Repair 024 file-read freshness suite
+        run: python tests/test_file_picker_freshness_024.py --html studio/context_tree_studio_authority_repaired_026.html --results /tmp/repair024-on026.json
+      - name: Repair 025 authority read freshness suite
+        run: python tests/test_authority_dialog_read_freshness_025.py --html studio/context_tree_studio_authority_repaired_026.html --results /tmp/repair025-on026.json
+      - name: Repair 026 modal interaction isolation suite
+        run: python tests/test_authority_modal_isolation_026.py --results /tmp/repair026.json
