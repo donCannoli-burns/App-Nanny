@@ -1,0 +1,40 @@
+name: Repair 020 metadata contract
+
+on:
+  push:
+    branches:
+      - repair/020-metadata-contract
+  pull_request:
+    branches:
+      - checkpoint/repair-019-prealpha-20261102
+
+permissions:
+  contents: read
+
+jobs:
+  metadata-contract:
+    name: Reject hash-valid metadata contradictions
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser test dependencies
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.57.0
+          python -m playwright install --with-deps chromium
+      - name: Check inline JavaScript syntax
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          p=Path('studio/context_tree_studio_authority_repaired_020.html')
+          m=re.search(r'<script>(.*?)</script>',p.read_text(), re.S)
+          assert m, 'Missing inline Studio script'
+          Path('/tmp/app-nanny-studio.js').write_text(m.group(1))
+          PY
+          node --check /tmp/app-nanny-studio.js
+      - name: Verify / restore / re-export negative and positive fixtures
+        run: |
+          python tests/test_metadata_contract_020.py --json /tmp/repair020-results.json

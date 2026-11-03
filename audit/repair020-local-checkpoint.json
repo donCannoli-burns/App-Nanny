@@ -1,0 +1,24 @@
+{
+  "schema": "app-nanny/repair020-local-checkpoint-v1",
+  "source_branch": "repair/020-metadata-contract",
+  "base_commit": "940b97c0a41f92c089a6cf3851b3762fbb07cdfc",
+  "source_path": "studio/context_tree_studio_authority_repaired_020.html",
+  "source_sha256": "a98f0b7b001dd7b02506b8161a83748f65df573aebef6976b5077d13bbdda944",
+  "source_bytes": 171828,
+  "baseline_sha256": "8b41c0096ebbbc4f920b1f059ea908d9b0aded5d6c6f01cdedeec77e77c14674",
+  "status": "LOCAL_REPAIR_CANDIDATE_PASS__INDEPENDENT_REAUDIT_REQUIRED__PHASE1_BLOCKED",
+  "independent_reaudit": "NOT_YET_PERFORMED",
+  "phase1_authorized": false,
+  "native_file_persistence": "NOT_VERIFIED",
+  "crash_durability": "NOT_VERIFIED",
+  "historic_actor_authentication": "NOT_VERIFIED",
+  "test_results": [
+    "test_metadata_contract_020:14/14",
+    "historical_repair019_metadata:45/45",
+    "historical_repair018_races:77/77",
+    "historical_repair017_export_atomicity:19/19",
+    "historical_repair016_third_key_arrival:18/18",
+    "historical_receipts_aligned019:7/7"
+  ],
+  "caveat": "Historical suite scripts and fixtures were run from a disposable local staging copy. CI in the repair branch runs the new portable 14-case suite. GitHub actions result is not asserted until GitHub reports it."
+}
