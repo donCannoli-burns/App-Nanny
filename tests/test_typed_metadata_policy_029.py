@@ -25,7 +25,7 @@ CANONICAL_NOTE="The ZIP SHA-256 is saved in the app export ledger after download
 def variants(root, source):
     with zipfile.ZipFile(source) as archive:
         seed={n:archive.read(n) for n in archive.namelist()}
-    rows=[("clean_control",None,None,None,"accept",None,None)]
+    rows=[("clean_control",None,None,"accept",None,None)]
     # label, member, JSON mutation, class, expected action, warning path, dropped field path
     rows.extend([
       ("notes_reword", "manifest.json",lambda d:d.__setitem__("notes","Untrusted alternate publisher note"),"reject","NONCANONICAL_GENERATED_NOTE",None),
