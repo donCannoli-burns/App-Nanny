@@ -96,6 +96,12 @@ def main():
                             row["restore"]=restored
                             if expect=="reject":
                                 assert "Restore failed" in restored and token in restored,(name,restored)
+                            elif member=="tree_full.json":
+                                # Frozen Repair 028 has this same unrelated planning
+                                # reconstruction defect. It must be reported, not
+                                # silently repaired inside the metadata-policy patch.
+                                assert "Restore failed: Noncanonical saved state: planning" in restored,(name,restored)
+                                row["inherited_standalone_restore_block"]=True
                             else:
                                 assert "Restored " in restored,(name,restored)
                                 if expect=="warn":
@@ -113,6 +119,23 @@ def main():
                     finally:
                         if ctx:ctx.close()
                 case(result,name,run)
+
+            def inherited_028(row):
+                old028=ROOT/"studio/context_tree_studio_authority_repaired_028.html"
+                assert hashlib.sha256(old028.read_bytes()).hexdigest()=="bd00c4c6326efe65a39fc896f567f4ea0b53f12aa01f6372112eb31ec0dcb1f1"
+                ctx=None
+                try:
+                    ctx,p,errors=open_page(browser,old028.read_text("utf-8"))
+                    path=Path(td)/"original028-standalone-tree-full.json"
+                    path.write_bytes(documents["tree_full.json"])
+                    assert "SEMANTICS_VALID" in verify(p,path)
+                    restored=restore(p,path)
+                    assert "Restore failed: Noncanonical saved state: planning" in restored,restored
+                    row["restore"]=restored
+                    assert not errors,errors
+                finally:
+                    if ctx:ctx.close()
+            case(result,"frozen028_tree_full_restore_preexisting_failure",inherited_028)
 
             check_json("standalone_tree_full_clean","tree_full.json",lambda d:None,"accept",None)
             check_json("standalone_tree_full_advisory","tree_full.json",
@@ -162,13 +185,13 @@ def main():
             browser.close()
     passed=sum(r["outcome"]=="PASS" for r in result)
     overall={"schema":"app-nanny/repair029-standalone-and-modal/v1",
-        "status":"CANDIDATE_TEST_PASS__INDEPENDENT_REVIEW_REQUIRED__PHASE1_BLOCKED" if passed==len(result)==7 else "CANDIDATE_TEST_FAIL__PHASE1_BLOCKED",
+        "status":"CANDIDATE_TEST_PASS__INDEPENDENT_REVIEW_REQUIRED__PHASE1_BLOCKED" if passed==len(result)==8 else "CANDIDATE_TEST_FAIL__PHASE1_BLOCKED",
         "total":len(result),"passed":passed,"failed":len(result)-passed,
         "phase1_authorized":False,"cases":result}
     if args.results:
         args.results.write_text(json.dumps(overall,indent=2)+"\n")
     print(f"REPAIR029-STANDALONE: {overall['status']} ({passed}/{len(result)})")
-    return 0 if passed==7 else 1
+    return 0 if passed==8 else 1
 
 if __name__=="__main__":
     sys.exit(main())
