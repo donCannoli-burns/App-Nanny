@@ -38,7 +38,7 @@ jobs:
           Path('/tmp/app-nanny-029.js').write_text(found.group(1),encoding='utf-8')
           PY
           node --check /tmp/app-nanny-029.js
-          python -m py_compile tests/test_typed_metadata_policy_029.py
+          python -m py_compile tests/test_typed_metadata_policy_029.py tests/test_standalone_metadata_029.py
           sha256sum studio/context_tree_studio_authority_repaired_029.html tests/test_typed_metadata_policy_029.py
       - name: Repair 020 metadata contract on 029
         run: python tests/test_metadata_contract_020.py --html studio/context_tree_studio_authority_repaired_029.html --json /tmp/r020-on029.json
@@ -60,3 +60,5 @@ jobs:
         run: python tests/test_cross_operation_async_028.py --html studio/context_tree_studio_authority_repaired_029.html --results /tmp/r028-on029.json
       - name: Repair 029 typed-metadata warning/rejection matrix
         run: python tests/test_typed_metadata_policy_029.py --html studio/context_tree_studio_authority_repaired_029.html --results /tmp/r029.json
+      - name: Repair 029 standalone and Restore-dialog metadata coverage
+        run: python tests/test_standalone_metadata_029.py --html studio/context_tree_studio_authority_repaired_029.html --results /tmp/r029-standalone.json
