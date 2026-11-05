@@ -41,9 +41,14 @@ Every explicitly permitted extension is *untrusted*, has **no execution or authe
 
 Warnings must also remain visible when Restore requires an unresolved human authority decision, and after its eventual Accept. The warning does not count as metadata-authority proof. Unknown authority-like fields (for example `actorAttestation`) are never silently stripped and accepted.
 
+
+## Known inherited standalone Restore blocker (out of Policy B scope)
+
+The additional candidate CI first exposed `Restore failed: Noncanonical saved state: planning` for an otherwise Verify-valid standalone `tree_full.json` produced by the frozen Repair 019 application. In the inspected 028/029 code, `payloadFor('tree_full')` exports `planningEvidence` whereas `recoverFullJson` attempts to read `d.planning` before canonical-state admission. The eight-case follow-up includes an exact frozen Repair 028 control to establish the failure is inherited. Its two standalone tree_full controls therefore check verification and **expected fail-closed Restore**, not a successful project import or lossless re-export. This must not be silently repaired as part of metadata Policy B or credited as persistence/migration success. Resolve through separate finding, approved scope, and independent review if standalone tree_full Restore is required.
+
 ## Acceptance and rollback
 
-- New 16-case ZIP candidate suite plus 7-case standalone JSON and Restore-origin authority-modal suite must pass through actual Chromium Verify, Restore and re-export, with positive allowed-extension warning checks, unchanged field-specific negative controls, and no JS exceptions.
+- New 16-case ZIP candidate suite plus 8-case standalone JSON and Restore-origin authority-modal suite must pass through actual Chromium Verify, Restore and re-export, with positive allowed-extension warning checks, unchanged field-specific negative controls, and no JS exceptions.
 - Existing Repair 020–028 regressions must run **on the Repair 029 source**.
 - Independent byte-exact adversarial reproduction must confirm the exact source, warning persistence through Restore-origin dialogs, malformed/ambiguous input handling, and full-archive re-export.
 - A separate specialist reviewer must decide whether the typed allowlist should be extended, restricted, or changed before merge.
