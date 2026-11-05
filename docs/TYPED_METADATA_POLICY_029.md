@@ -29,7 +29,7 @@ The Repair 029 candidate uses **closed, path-specific metadata fields**:
 | `templates.json` | format, templates | None |
 | `project_state.json.authority` | format, status, source, actor, reason, conflictFields, canonicalProjectSha256, importedProjectSha256, resolvedAt | None |
 
-Advisory strings reject ASCII control characters. Any other unknown key **is a semantic conflict** with path-specific reason `METADATA_UNKNOWN_FIELD`. Malformed explicitly allowed values are rejected with `METADATA_EXTENSION_INVALID`. This version has **no wildcard** `x_*` extension policy. Known semantic checks remain additional requirements; fields that are present can still fail for inconsistent values.
+Advisory strings reject ASCII control characters. The same wrapper/hash-field policy applies to standalone verified tree JSON, planning snapshot and planning ledger files; supported standalone tree metadata uses the same typed `x_advisory` field and visible warning. Direct restored `project_state.json` authority records reject extra authority keys. Any other unknown key **is a semantic conflict** with path-specific reason `METADATA_UNKNOWN_FIELD`. Malformed explicitly allowed values are rejected with `METADATA_EXTENSION_INVALID`. This version has **no wildcard** `x_*` extension policy. Known semantic checks remain additional requirements; fields that are present can still fail for inconsistent values.
 
 **Generated note decision:** `manifest.json.notes` is exact producer metadata, not free-form trusted testimony. An altered note, including a forged actor claim, is rejected as `NONCANONICAL_GENERATED_NOTE`. This is a deliberate strict choice, not a promise to migrate unknown legacy notes.
 
@@ -43,7 +43,7 @@ Warnings must also remain visible when Restore requires an unresolved human auth
 
 ## Acceptance and rollback
 
-- New 16-case candidate suite must pass through actual Chromium Verify, Restore and re-export, with positive allowed-extension warning checks, unchanged field-specific negative controls, and no JS exceptions.
+- New 16-case ZIP candidate suite plus 7-case standalone JSON and Restore-origin authority-modal suite must pass through actual Chromium Verify, Restore and re-export, with positive allowed-extension warning checks, unchanged field-specific negative controls, and no JS exceptions.
 - Existing Repair 020–028 regressions must run **on the Repair 029 source**.
 - Independent byte-exact adversarial reproduction must confirm the exact source, warning persistence through Restore-origin dialogs, malformed/ambiguous input handling, and full-archive re-export.
 - A separate specialist reviewer must decide whether the typed allowlist should be extended, restricted, or changed before merge.
