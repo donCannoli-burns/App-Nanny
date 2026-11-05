@@ -1,0 +1,64 @@
+name: Repair 029 Typed Metadata Policy Candidate
+
+on:
+  push:
+    branches:
+      - repair/029-typed-metadata-policy
+  pull_request:
+    branches:
+      - repair/028-cross-operation-export-freshness
+
+permissions:
+  contents: read
+
+jobs:
+  typed-metadata-policy:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Playwright Chromium
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.57.0
+          python -m playwright install --with-deps chromium
+      - name: Frozen parent and source boundary / syntax checks
+        run: |
+          git merge-base --is-ancestor daa4179f086645add845a55de8f96ce5b4928d5e HEAD
+          echo 'bd00c4c6326efe65a39fc896f567f4ea0b53f12aa01f6372112eb31ec0dcb1f1  studio/context_tree_studio_authority_repaired_028.html' | sha256sum -c -
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          src=Path('studio/context_tree_studio_authority_repaired_029.html').read_text('utf-8')
+          found=re.search(r'<script>(.*?)</script>',src,re.S)
+          assert found, 'Missing Studio inline script'
+          Path('/tmp/app-nanny-029.js').write_text(found.group(1),encoding='utf-8')
+          PY
+          node --check /tmp/app-nanny-029.js
+          python -m py_compile tests/test_typed_metadata_policy_029.py tests/test_standalone_metadata_029.py
+          sha256sum studio/context_tree_studio_authority_repaired_029.html tests/test_typed_metadata_policy_029.py
+      - name: Repair 020 metadata contract on 029
+        run: python tests/test_metadata_contract_020.py --html studio/context_tree_studio_authority_repaired_029.html --json /tmp/r020-on029.json
+      - name: Repair 021 strict JSON on 029
+        run: python tests/test_duplicate_json_021.py --html studio/context_tree_studio_authority_repaired_029.html --results /tmp/r021-on029.json
+      - name: Repair 022 scaffold admission on 029
+        run: python tests/test_scaffold_admission_022.py --html studio/context_tree_studio_authority_repaired_029.html --results /tmp/r022-on029.json
+      - name: Repair 023 fatal UTF-8 on 029
+        run: python tests/test_file_picker_utf8_023.py --html studio/context_tree_studio_authority_repaired_029.html --results /tmp/r023-on029.json
+      - name: Repair 024 file-picker freshness on 029
+        run: python tests/test_file_picker_freshness_024.py --html studio/context_tree_studio_authority_repaired_029.html --results /tmp/r024-on029.json
+      - name: Repair 025 dialog file-read freshness on 029
+        run: python tests/test_authority_dialog_read_freshness_025.py --html studio/context_tree_studio_authority_repaired_029.html --results /tmp/r025-on029.json
+      - name: Repair 026 modal isolation on 029
+        run: python tests/test_authority_modal_isolation_026.py --html studio/context_tree_studio_authority_repaired_029.html --results /tmp/r026-on029.json
+      - name: Repair 027 Restore freshness on 029
+        run: python tests/test_restore_freshness_027.py --html studio/context_tree_studio_authority_repaired_029.html --results /tmp/r027-on029.json
+      - name: Repair 028 cross-operation Export on 029
+        run: python tests/test_cross_operation_async_028.py --html studio/context_tree_studio_authority_repaired_029.html --results /tmp/r028-on029.json
+      - name: Repair 029 typed-metadata warning/rejection matrix
+        run: python tests/test_typed_metadata_policy_029.py --html studio/context_tree_studio_authority_repaired_029.html --results /tmp/r029.json
+      - name: Repair 029 standalone and Restore-dialog metadata coverage
+        run: python tests/test_standalone_metadata_029.py --html studio/context_tree_studio_authority_repaired_029.html --results /tmp/r029-standalone.json
