@@ -933,6 +933,40 @@ function inspectTypedMetadataPolicy(bundle){
 function metadataWarningText(warnings){
  return warnings?.length?' · WARNING: '+warnings.join(' · '):'';
 }
+// Policy B also applies to standalone verified JSON envelopes. ZIP-only
+// enforcement would otherwise allow untrusted metadata through Verify/Restore.
+function inspectStandaloneMetadataPolicy(doc){
+ const errors=[],warnings=[];
+ const plain=v=>v!==null&&typeof v==='object'&&!Array.isArray(v);
+ const text=v=>typeof v==='string'&&v.length<=256&&!/[\u0000-\u001f\u007f]/.test(v);
+ const check=(obj,path,known,extensions={})=>{
+  if(!plain(obj)){errors.push('METADATA_OBJECT_REQUIRED:'+path);return}
+  for(const k of Object.keys(obj)){
+   if(known.includes(k))continue;
+   const at=path+'.'+k;
+   if(Object.hasOwn(extensions,k)){
+    if(extensions[k](obj[k]))warnings.push('UNTRUSTED_EXTENSION_DROPPED_ON_REEXPORT:'+at);
+    else errors.push('METADATA_EXTENSION_INVALID:'+at);
+   }else errors.push('METADATA_UNKNOWN_FIELD:'+at);
+  }
+ };
+ if(plain(doc)&&Object.hasOwn(doc,'export')){
+  check(doc,'standalone.json',['export','data']);
+  check(doc.export,'standalone.json.export',['format','kind','version','timestamp','keywords','sha256'],{x_advisory:text});
+  check(doc.export?.sha256,'standalone.json.export.sha256',['algorithm','scope','value']);
+ }else if(doc?.format==='context-tree/verified-snapshot-v1'){
+  check(doc,'planning_snapshot.json',['format','projectId','version','timestamp','revision','contentHash','data']);
+  check(doc.contentHash,'planning_snapshot.json.contentHash',['algorithm','scope','value']);
+ }else if(doc?.format==='context-tree/verified-ledger-v1'){
+  check(doc,'planning_ledger.json',['format','version','timestamp','revision','sha256','data']);
+  check(doc.sha256,'planning_ledger.json.sha256',['algorithm','scope','value']);
+ }else if(doc?.format===PROJECT_FORMAT&&doc.authority!==null&&doc.authority!==undefined){
+  check(doc.authority,'project_state.json.authority',
+   ['format','status','source','actor','reason','conflictFields',
+    'canonicalProjectSha256','importedProjectSha256','resolvedAt']);
+ }
+ return {errors,warnings};
+}
 function validateBundleSemantics(bundle){
  const p=bundle.state,report=inspectAuthority(p);
  const errors=[];
@@ -1276,6 +1310,9 @@ async function verifyExportFile(file){if(!file)return;const el=$('verifyResult')
    ?{status:'SEMANTICS_UNPROVEN',errors:['projection_lacks_replay_and_source_evidence']}
    :{status:'SEMANTICS_CONFLICT',errors:['stale_authority_binding']};
  }
+ const typedStandalone=inspectStandaloneMetadataPolicy(doc);
+ semantic={...semantic,errors:[...(semantic.errors||[]),...typedStandalone.errors],warnings:typedStandalone.warnings};
+ if(typedStandalone.errors.length)semantic.status='SEMANTICS_CONFLICT';
  }
  const exact=await sha256(bytes);el.textContent=`BYTES_VERIFIED · ${semantic.status} · ${type}${revision===null?'':' · revision '+revision} · SHA-256 ${exact}`+(semantic.errors?.length?' · '+semantic.errors.join(', '):'');el.textContent+=metadataWarningText(semantic.warnings);el.className='status-line '+(semantic.status==='SEMANTICS_VALID'&&!semantic.warnings?.length?'ok':'error');
  }catch(e){el.textContent='VERIFICATION FAILED · '+e.message;el.className='status-line error'}finally{$('verifyFile').value=''}}
@@ -1350,6 +1387,9 @@ async function restoreFile(file){
    data=bundle.state;bundledTemplates=validatedTemplates(bundle.templates);
   }else{
    const parsed=strictJsonParse(bytes,file.name);
+   const typedStandalone=inspectStandaloneMetadataPolicy(parsed);
+   if(typedStandalone.errors.length)throw Error('Unsupported standalone metadata: '+typedStandalone.errors.join(', '));
+   metadataWarnings=typedStandalone.warnings;
    if(parsed?.export?.kind==='tree_full'&&(!parsed.export.sha256?.value||await sha256(jsonBytes(parsed.data))!==parsed.export.sha256.value))throw Error('tree_full payload SHA-256 mismatch');
    if(!restoreTransactionIsCurrent(tx))return;
    data=parsed.format===PROJECT_FORMAT?parsed:recoverFullJson(parsed,bytes,file.name);
